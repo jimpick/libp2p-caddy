@@ -9,6 +9,7 @@ import (
 
 	"github.com/libp2p/go-libp2p"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
+	ws "github.com/libp2p/go-ws-transport"
 )
 
 func main() {
@@ -17,7 +18,8 @@ func main() {
 
 	// start a libp2p node with default settings
 	node, err := libp2p.New(ctx,
-		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/2000"),
+		libp2p.Transport(ws.New),
+		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/2000/ws"),
 	)
 	if err != nil {
 		panic(err)
