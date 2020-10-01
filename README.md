@@ -8,6 +8,8 @@ Based on:
 * [Getting started with go-libp2p](https://docs.libp2p.io/tutorials/getting-started/go/)
 * [Getting started with js-libp2p](https://docs.libp2p.io/tutorials/getting-started/javascript/)
 
+![Screen recording](libp2p.gif)
+
 ## License
 
 MIT/Apache-2 (Permissive License Stack)
