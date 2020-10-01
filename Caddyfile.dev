@@ -1,0 +1,28 @@
+{
+  admin off
+  https_port 9055
+  http_port 19055
+}
+
+libp2p-caddy.localhost:9055 {
+	log
+
+	@websockets {
+		header_regexp Connection Upgrade
+		header        Upgrade websocket
+	}
+	reverse_proxy @websockets localhost:2000
+
+	route * {
+	  reverse_proxy localhost:1234
+	}
+}
+
+libp2p-caddy-ws.localhost:9056 {
+	log
+
+	route * {
+	  reverse_proxy localhost:2000
+	}
+}
+
