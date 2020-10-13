@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   output.textContent = ''
 
   function log (txt) {
-    console.info('JS Log:', txt)
+    console.info(txt)
     output.textContent += `${txt.trim()}\n`
   }
 
@@ -39,12 +39,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   status.innerText = 'js libp2p started!'
   log(`JS libp2p id is ${libp2p.peerId.toB58String()}`)
 
-  const button = document.querySelector('#jsPingBtn')
-  button.onclick = async function () {
+  const jsPingButton = document.querySelector('#jsPingBtn')
+  jsPingButton.onclick = async function () {
     const target = document.querySelector('#maddr').value
     log(`JS Ping: ${target}`)
     const latency = await libp2p.ping(target)
     log(`JS Pong: ${latency}ms`)
+  }
+
+  const goPingButton = document.querySelector('#goPingBtn')
+  const state = {
+    counter: 0
+  }
+  goPingButton.onclick = async function () {
+    // const target = document.querySelector('#maddr').value
+    // log(`Go Ping: ${target}`)
+    state.counter = window.add(state.counter, 1)
+    log(`Go Counter: ${state.counter}`)
+    /*
+    const latency = await libp2p.ping(target)
+    log(`JS Pong: ${latency}ms`)
+    */
   }
 
   // Export libp2p to the window so you can play with the API
