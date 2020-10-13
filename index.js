@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   output.textContent = ''
 
   function log (txt) {
-    console.info(txt)
+    console.info('JS Log:', txt)
     output.textContent += `${txt.trim()}\n`
   }
 
   // Listen for new connections to peers
   libp2p.connectionManager.on('peer:connect', connection => {
-    log(`Connected to ${connection.remotePeer.toB58String()}`)
+    log(`JS Connected to ${connection.remotePeer.toB58String()}`)
   })
 
   // Listen for peers disconnecting
@@ -36,15 +36,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   await libp2p.start()
-  status.innerText = 'libp2p started!'
-  log(`libp2p id is ${libp2p.peerId.toB58String()}`)
+  status.innerText = 'js libp2p started!'
+  log(`JS libp2p id is ${libp2p.peerId.toB58String()}`)
 
-  const button = document.querySelector('#pingBtn')
+  const button = document.querySelector('#jsPingBtn')
   button.onclick = async function () {
     const target = document.querySelector('#maddr').value
-    log(`Ping: ${target}`)
+    log(`JS Ping: ${target}`)
     const latency = await libp2p.ping(target)
-    log(`Pong: ${latency}ms`)
+    log(`JS Pong: ${latency}ms`)
   }
 
   // Export libp2p to the window so you can play with the API
