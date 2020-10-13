@@ -1,4 +1,6 @@
 .cache
 *.swp
+*.wasm
 node_modules
 dist
+.parcel-cache

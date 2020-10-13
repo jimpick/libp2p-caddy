@@ -3,8 +3,15 @@
 <html lang="en">
 
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <title>js-libp2p parcel.js browser example</title>
+    <script src="go-wasm/wasm_exec.js"></script>
+    <script>
+      const go = new Go();
+      WebAssembly.instantiateStreaming(fetch("go-wasm/main.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+      });
+    </script>
   </head>
 
   <body>
@@ -16,7 +23,7 @@
       <p>Note: edit HTML to update the peer id for your go-libp2p server)</p>
       <label>Maddr:</label>
       <!-- <input type="text" id="maddr" style="width: 80%" value="/ip4/127.0.0.1/tcp/2000/ws/p2p/QmbPkVRVtQnjpZYT7KpxpXAYYFFuzsBPC8o6S2Sypggesr"></div> -->
-      <input type="text" id="maddr" style="width: 80%" value="/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/QmZCujQRMJs6Qnbv7aRMteL5TaCJSzJKX6UrptUu9pQvqy"></div>
+      <input type="text" id="maddr" style="width: 80%" value="/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/Qmf7AhFqhgyfYZUEN9jLhFdNL3eErydiyHHJw1YLwt6Tbu"></div>
       <button id="pingBtn">Ping!</button>
     </div>
 

@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "caddy": "caddy run --config Caddyfile.dev",
-    "start": "parcel index.html"
+    "start": "parcel index.js"
   },
   "keywords": [],
   "author": "Jim Pick (@jimpick)",
@@ -29,6 +29,6 @@
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-polyfill": "^6.26.0",
-    "parcel-bundler": "^1.12.4"
+    "parcel": "^2.0.0-beta.1"
   }
 }

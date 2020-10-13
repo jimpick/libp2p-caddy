@@ -13,6 +13,17 @@ libp2p-caddy.localhost:9055 {
 	}
 	reverse_proxy @websockets localhost:2000
 
+	route / {
+	  root * .
+	  file_server
+	}
+
+	route /go-wasm/* {
+	  uri strip_prefix /go-wasm
+	  root * ./go-wasm
+	  file_server
+	}
+
 	route * {
 	  reverse_proxy localhost:1234
 	}
