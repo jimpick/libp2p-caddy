@@ -36,7 +36,7 @@ func main() {
 	pingService := &ping.PingService{Host: node}
 	node.SetStreamHandler(ping.ID, pingService.PingHandler)
 
-	maddr := "/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/QmSmP3E4EgTvbK9bNCHw1EZ3MdmeuX5NeFJLQoRqre1p3K"
+	maddr := "/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/Qmf23ycNkZFqFKWTmrNmRWcTKviuVfnGnnmZLQHM3BQB9t"
 	addr, err := multiaddr.NewMultiaddr(maddr)
 	if err != nil {
 		panic(err)
