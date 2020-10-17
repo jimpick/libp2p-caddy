@@ -48,20 +48,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const goPingButton = document.querySelector('#goPingBtn')
-  const state = {
-    counter: 0
-  }
   goPingButton.onclick = async function () {
-    // const target = document.querySelector('#maddr').value
-    // log(`Go Ping: ${target}`)
-    state.counter = window.add(state.counter, 1)
-    log(`Go Counter: ${state.counter}`)
-    /*
-    const latency = await libp2p.ping(target)
-    log(`JS Pong: ${latency}ms`)
-    */
+    const target = document.querySelector('#maddr').value
+    log(`Go Ping: ${target}`)
+    const latency = window.ping(target) // Synchronous
+    log(`Go Pong: ${latency}ms`)
   }
 
   // Export libp2p to the window so you can play with the API
   window.libp2p = libp2p
+  console.log('.env PEER_ID:', process.env.PEER_ID)
+  document.querySelector('#maddr').value =
+    '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID
 })
