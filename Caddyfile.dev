@@ -37,3 +37,11 @@ libp2p-caddy-ws.localhost:9056 {
 	}
 }
 
+libp2p-caddy-ipfs.localhost:9057 {
+	log
+
+	route * {
+	  reverse_proxy localhost:4005
+	}
+}
+

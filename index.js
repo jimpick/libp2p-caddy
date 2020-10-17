@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`Go Pong: ${latency}ms`)
   }
 
+  const setIpfsMaddrButton = document.querySelector('#setIpfsMaddrBtn')
+  setIpfsMaddrButton.onclick = async function () {
+    document.querySelector('#maddr').value = '/dns4/libp2p-caddy-ipfs.localhost/tcp/9057/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
+  }
+
   // Export libp2p to the window so you can play with the API
   window.libp2p = libp2p
   console.log('.env PEER_ID:', process.env.PEER_ID)
