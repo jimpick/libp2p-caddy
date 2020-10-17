@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/libp2p/go-libp2p"
+	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
 	ws "github.com/libp2p/go-ws-transport"
@@ -14,15 +15,42 @@ import (
 )
 
 var (
-	ch           <-chan ping.Result
-	pingResultCh chan ping.Result
-	pingMaddr    string
+	node        host.Host
+	pingService *ping.PingService
+	// ch           <-chan ping.Result
+	// pingResultCh chan ping.Result
+	pingMaddr string
 )
 
 func pingNode(this js.Value, param []js.Value) interface{} {
 	maddr := param[0].String()
 	println("Go maddr: ", maddr)
-	pingMaddr = maddr
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		ctx := context.Background()
+		fmt.Printf("ping maddr found: %v\n", maddr)
+		addr, err := multiaddr.NewMultiaddr(maddr)
+		if err != nil {
+			fmt.Printf("NewMultiaddr error %v\n", err)
+			return
+		}
+		peer, err := peerstore.AddrInfoFromP2pAddr(addr)
+		if err != nil {
+			fmt.Printf("AddInfoFromP2pAddr error %v\n", err)
+			return
+		}
+		if err := node.Connect(ctx, *peer); err != nil {
+			fmt.Printf("Connect error %v\n", err)
+			return
+		}
+		ch := pingService.Ping(ctx, peer.ID)
+		res := <-ch
+		fmt.Println("pinged", addr, "in", res.RTT)
+		// pingResultCh <- res
+		pingMaddr = ""
+	}()
+
 	return js.ValueOf(1234)
 
 	// res := <-pingResultCh
@@ -71,7 +99,8 @@ func main() {
 
 	// start a libp2p node that listens on a random local TCP port,
 	// but without running the built-in ping protocol
-	node, err := libp2p.New(ctx,
+	var err error
+	node, err = libp2p.New(ctx,
 		libp2p.Transport(ws.New),
 		libp2p.Ping(false),
 	)
@@ -80,63 +109,8 @@ func main() {
 	}
 
 	// configure our own ping protocol
-	pingService := &ping.PingService{Host: node}
+	pingService = &ping.PingService{Host: node}
 	node.SetStreamHandler(ping.ID, pingService.PingHandler)
-
-	pingResultCh = make(chan ping.Result)
-
-	go func() {
-		for {
-			if pingMaddr != "" {
-				// maddr := "/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/QmRvgKx6ffb9SNJBbVWTqhtZWVM36cf7zB65k8CdywPRXS"
-				fmt.Printf("Jim ping maddr found: %v\n", pingMaddr)
-				addr, err := multiaddr.NewMultiaddr(pingMaddr)
-				if err != nil {
-					panic(err)
-				}
-				peer, err := peerstore.AddrInfoFromP2pAddr(addr)
-				if err != nil {
-					panic(err)
-				}
-				if err := node.Connect(ctx, *peer); err != nil {
-					panic(err)
-				}
-				fmt.Println("sending ping messages to", addr)
-				ch = pingService.Ping(ctx, peer.ID)
-				res := <-ch
-				fmt.Println("pinged", addr, "in", res.RTT)
-				// pingResultCh <- res
-				pingMaddr = ""
-			}
-			time.Sleep(5 * time.Second)
-		}
-	}()
-
-	/*
-		sendPingCh = make(chan string)
-		go func() {
-			for {
-				maddr := <-sendPingCh
-				fmt.Println("request to ping", maddr)
-				addr, err := multiaddr.NewMultiaddr(maddr)
-				if err != nil {
-					panic(err)
-				}
-				peer, err := peerstore.AddrInfoFromP2pAddr(addr)
-				if err != nil {
-					panic(err)
-				}
-				if err := node.Connect(ctx, *peer); err != nil {
-					panic(err)
-				}
-				fmt.Println("connected, pinging", peer.ID)
-				newPingCh := pingService.Ping(ctx, peer.ID)
-				res := <-newPingCh
-				fmt.Println("pinged", addr, "in", res.RTT)
-				pingCh <- res
-			}
-		}()
-	*/
 
 	js.Global().Set("ping", js.FuncOf(pingNode))
 
