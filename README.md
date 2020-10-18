@@ -12,6 +12,10 @@ Based on:
 
 ![Screen recording](libp2p.gif)
 
+go-graphsync:
+
+![go-graphsync screen recording](wasm-go-graphsync.gif)
+
 # Instructions
 
 (tested on OS X with Caddy 2 and Google Chrome)

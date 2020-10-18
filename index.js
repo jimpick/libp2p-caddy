@@ -87,9 +87,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return
       }
       const cid = 'QmeqtCLGLNWsK5djgEN76F2z7gLodWCaWesupKrnGA4TWf'
-      log(`Go GraphSync fetch: ${target} ${cid}`)
+      log(`Go GraphSync fetch:\n`)
+      log(`> Maddr: ${target}`)
+      log(`> CID: ${cid}`)
       const data = await window.graphSyncFetch(target, cid)
-      log(`Go GraphSync fetch:\n${data}\n`)
+      log(`> Data:\n${data}\n`)
     }
 
   })
