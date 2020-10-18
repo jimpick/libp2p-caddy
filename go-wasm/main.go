@@ -3,9 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"syscall/js"
 
 	"github.com/ipfs/go-cid"
+	"github.com/ipfs/go-datastore"
+	dssync "github.com/ipfs/go-datastore/sync"
+	blockstore "github.com/ipfs/go-ipfs-blockstore"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
@@ -108,6 +112,13 @@ func graphSyncFetch(this js.Value, param []js.Value) interface{} {
 				reject.Invoke(js.ValueOf("Connect error"))
 				return
 			}
+
+			bs := blockstore.NewBlockstore(dssync.MutexWrap(datastore.NewMapDatastore()))
+			gs, err := newGraphsync(ctx, node, bs)
+			if err != nil {
+				log.Fatal("failed to start", err)
+			}
+			fmt.Printf("Jim gs %v\n", gs)
 
 			/*
 				ch := pingService.Ping(ctx, peer.ID)
