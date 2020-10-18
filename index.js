@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   await libp2p.start()
-  status.innerText = 'js libp2p started!'
+  status.innerText = 'js libp2p started, loading go WASM bundle...'
   log(`JS libp2p id is ${libp2p.peerId.toB58String()}`)
 
   const jsPingButton = document.querySelector('#jsPingBtn')
+  jsPingButton.disabled = false
   jsPingButton.onclick = async function () {
     const target = document.querySelector('#maddr').value
     log(`JS Ping: ${target}`)
@@ -47,17 +48,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`JS Pong: ${latency}ms`)
   }
 
-  const goPingButton = document.querySelector('#goPingBtn')
-  goPingButton.onclick = async function () {
-    const target = document.querySelector('#maddr').value
-    log(`Go Ping: ${target}`)
-    const latency = await window.ping(target)
-    log(`Go Pong: ${latency}ms`)
-  }
-
   const setIpfsMaddrButton = document.querySelector('#setIpfsMaddrBtn')
   setIpfsMaddrButton.onclick = async function () {
-    document.querySelector('#maddr').value = '/dns4/libp2p-caddy-ipfs.localhost/tcp/9057/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
+    document.querySelector('#maddr').value =
+      '/dns4/libp2p-caddy-ipfs.localhost/tcp/9057/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
   }
 
   // Export libp2p to the window so you can play with the API
@@ -65,4 +59,34 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('.env PEER_ID:', process.env.PEER_ID)
   document.querySelector('#maddr').value =
     '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID
+
+  const go = new Go()
+  WebAssembly.instantiateStreaming(
+    fetch('go-wasm/main.wasm'),
+    go.importObject
+  ).then(result => {
+    status.innerText = 'All systems good! JS and Go loaded.'
+    go.run(result.instance)
+
+    // FIXME Add callback for ready state
+    const goPingButton = document.querySelector('#goPingBtn')
+    goPingButton.disabled = false
+    goPingButton.onclick = async function () {
+      const target = document.querySelector('#maddr').value
+      log(`Go Ping: ${target}`)
+      const latency = await window.ping(target)
+      log(`Go Pong: ${latency}ms`)
+    }
+
+    const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
+    goGraphSyncButton.disabled = false
+    goGraphSyncButton.onclick = async function () {
+      const target = document.querySelector('#maddr').value
+      const cid = 'QmeqtCLGLNWsK5djgEN76F2z7gLodWCaWesupKrnGA4TWf'
+      log(`Go GraphSync fetch: ${target} ${cid}`)
+      const latency = await window.graphSyncFetch(target, cid)
+      log(`Go GraphSync fetch: ${latency}ms`)
+    }
+
+  })
 })

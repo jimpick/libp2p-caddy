@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"syscall/js"
-	"time"
 
+	"github.com/ipfs/go-cid"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
@@ -33,26 +33,29 @@ func pingNode(this js.Value, param []js.Value) interface{} {
 		reject := args[1]
 
 		go func() {
-			time.Sleep(1 * time.Second)
-			ctx := context.Background()
-			fmt.Printf("ping maddr found: %v\n", maddr)
 			addr, err := multiaddr.NewMultiaddr(maddr)
 			if err != nil {
 				fmt.Printf("NewMultiaddr error %v\n", err)
 				reject.Invoke(js.ValueOf("NewMultiaddr error"))
 				return
 			}
+
 			peer, err := peerstore.AddrInfoFromP2pAddr(addr)
 			if err != nil {
 				fmt.Printf("AddInfoFromP2pAddr error %v\n", err)
 				reject.Invoke(js.ValueOf("AddInfoFromP2pAddr error"))
 				return
 			}
+
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
 			if err := node.Connect(ctx, *peer); err != nil {
 				fmt.Printf("Connect error %v\n", err)
 				reject.Invoke(js.ValueOf("Connect error"))
 				return
 			}
+
 			ch := pingService.Ping(ctx, peer.ID)
 			res := <-ch
 			fmt.Println("pinged", addr, "in", res.RTT)
@@ -63,6 +66,62 @@ func pingNode(this js.Value, param []js.Value) interface{} {
 
 	promiseConstructor := js.Global().Get("Promise")
 	return promiseConstructor.New(js.FuncOf(pingHandler))
+}
+
+func graphSyncFetch(this js.Value, param []js.Value) interface{} {
+	maddr := param[0].String()
+	cidArg := param[1].String()
+	fmt.Printf("Go maddr %v\n", maddr)
+	fmt.Printf("Go cid: %v\n", cidArg)
+
+	graphSyncFetchHandler := func(this js.Value, args []js.Value) interface{} {
+		resolve := args[0]
+		reject := args[1]
+
+		go func() {
+			addr, err := multiaddr.NewMultiaddr(maddr)
+			if err != nil {
+				fmt.Printf("NewMultiaddr error %v\n", err)
+				reject.Invoke(js.ValueOf("NewMultiaddr error"))
+				return
+			}
+
+			peer, err := peerstore.AddrInfoFromP2pAddr(addr)
+			if err != nil {
+				fmt.Printf("AddInfoFromP2pAddr error %v\n", err)
+				reject.Invoke(js.ValueOf("AddInfoFromP2pAddr error"))
+				return
+			}
+
+			target, err := cid.Decode(cidArg)
+			if err != nil {
+				fmt.Printf("failed to decode CID '%q': %s\n", cidArg, err)
+				reject.Invoke(js.ValueOf("CID Decode error"))
+			}
+			fmt.Printf("Go target: %v\n", target)
+
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			if err := node.Connect(ctx, *peer); err != nil {
+				fmt.Printf("Connect error %v\n", err)
+				reject.Invoke(js.ValueOf("Connect error"))
+				return
+			}
+
+			/*
+				ch := pingService.Ping(ctx, peer.ID)
+				res := <-ch
+				fmt.Println("pinged", addr, "in", res.RTT)
+				resolve.Invoke(js.ValueOf(res.RTT.Milliseconds()))
+			*/
+			resolve.Invoke(js.ValueOf(0))
+		}()
+		return nil
+	}
+
+	promiseConstructor := js.Global().Get("Promise")
+	return promiseConstructor.New(js.FuncOf(graphSyncFetchHandler))
 }
 
 func main() {
@@ -82,6 +141,7 @@ func main() {
 	node.SetStreamHandler(ping.ID, pingService.PingHandler)
 
 	js.Global().Set("ping", js.FuncOf(pingNode))
+	js.Global().Set("graphSyncFetch", js.FuncOf(graphSyncFetch))
 
 	println("WASM Go Initialized")
 

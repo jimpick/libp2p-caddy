@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/githubnemo/CompileDaemon v1.2.1 // indirect
+	github.com/ipfs/go-cid v0.0.7
 	github.com/libp2p/go-libp2p v0.11.0
 	github.com/libp2p/go-libp2p-core v0.6.1
 	github.com/libp2p/go-libp2p-nat v0.0.6 // indirect
