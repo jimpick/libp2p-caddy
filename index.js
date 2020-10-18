@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   goPingButton.onclick = async function () {
     const target = document.querySelector('#maddr').value
     log(`Go Ping: ${target}`)
-    const latency = window.ping(target) // Synchronous
+    const latency = await window.ping(target)
     log(`Go Pong: ${latency}ms`)
   }
 

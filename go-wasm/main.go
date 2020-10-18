@@ -17,88 +17,57 @@ import (
 var (
 	node        host.Host
 	pingService *ping.PingService
-	// ch           <-chan ping.Result
-	// pingResultCh chan ping.Result
-	pingMaddr string
 )
+
+// The following functions implement a window.ping() entrypoint callable from
+// JS that returns a promise.
+
+// See: https://withblue.ink/2020/10/03/go-webassembly-http-requests-and-promises.html
 
 func pingNode(this js.Value, param []js.Value) interface{} {
 	maddr := param[0].String()
 	println("Go maddr: ", maddr)
 
-	go func() {
-		time.Sleep(1 * time.Second)
-		ctx := context.Background()
-		fmt.Printf("ping maddr found: %v\n", maddr)
-		addr, err := multiaddr.NewMultiaddr(maddr)
-		if err != nil {
-			fmt.Printf("NewMultiaddr error %v\n", err)
-			return
-		}
-		peer, err := peerstore.AddrInfoFromP2pAddr(addr)
-		if err != nil {
-			fmt.Printf("AddInfoFromP2pAddr error %v\n", err)
-			return
-		}
-		if err := node.Connect(ctx, *peer); err != nil {
-			fmt.Printf("Connect error %v\n", err)
-			return
-		}
-		ch := pingService.Ping(ctx, peer.ID)
-		res := <-ch
-		fmt.Println("pinged", addr, "in", res.RTT)
-		// pingResultCh <- res
-		pingMaddr = ""
-	}()
+	pingHandler := func(this js.Value, args []js.Value) interface{} {
+		resolve := args[0]
+		reject := args[1]
 
-	return js.ValueOf(1234)
+		go func() {
+			time.Sleep(1 * time.Second)
+			ctx := context.Background()
+			fmt.Printf("ping maddr found: %v\n", maddr)
+			addr, err := multiaddr.NewMultiaddr(maddr)
+			if err != nil {
+				fmt.Printf("NewMultiaddr error %v\n", err)
+				reject.Invoke(js.ValueOf("NewMultiaddr error"))
+				return
+			}
+			peer, err := peerstore.AddrInfoFromP2pAddr(addr)
+			if err != nil {
+				fmt.Printf("AddInfoFromP2pAddr error %v\n", err)
+				reject.Invoke(js.ValueOf("AddInfoFromP2pAddr error"))
+				return
+			}
+			if err := node.Connect(ctx, *peer); err != nil {
+				fmt.Printf("Connect error %v\n", err)
+				reject.Invoke(js.ValueOf("Connect error"))
+				return
+			}
+			ch := pingService.Ping(ctx, peer.ID)
+			res := <-ch
+			fmt.Println("pinged", addr, "in", res.RTT)
+			resolve.Invoke(js.ValueOf(res.RTT.Milliseconds()))
+		}()
+		return nil
+	}
 
-	// res := <-pingResultCh
-
-	// create a background context (i.e. one that never cancels)
-	// ctx := context.Background()
-
-	/*
-		// start a libp2p node that listens on a random local TCP port,
-		// but without running the built-in ping protocol
-		node, err := libp2p.New(ctx,
-			libp2p.Transport(ws.New),
-			libp2p.Ping(false),
-		)
-		if err != nil {
-			panic(err)
-		}
-
-		// configure our own ping protocol
-		pingService := &ping.PingService{Host: node}
-		node.SetStreamHandler(ping.ID, pingService.PingHandler)
-
-		addr, err := multiaddr.NewMultiaddr(maddr)
-		if err != nil {
-			panic(err)
-		}
-		peer, err := peerstore.AddrInfoFromP2pAddr(addr)
-		if err != nil {
-			panic(err)
-		}
-		if err := node.Connect(ctx, *peer); err != nil {
-			panic(err)
-		}
-	*/
-
-	// res := <-ch
-	/*
-		fmt.Println("click pinged", maddr, "in", res.RTT)
-		return js.ValueOf(res.RTT.Milliseconds())
-	*/
+	promiseConstructor := js.Global().Get("Promise")
+	return promiseConstructor.New(js.FuncOf(pingHandler))
 }
 
 func main() {
-	// create a background context (i.e. one that never cancels)
 	ctx := context.Background()
 
-	// start a libp2p node that listens on a random local TCP port,
-	// but without running the built-in ping protocol
 	var err error
 	node, err = libp2p.New(ctx,
 		libp2p.Transport(ws.New),
