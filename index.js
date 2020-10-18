@@ -82,10 +82,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     goGraphSyncButton.disabled = false
     goGraphSyncButton.onclick = async function () {
       const target = document.querySelector('#maddr').value
+      if (!target.match(/ipfs/)) {
+        alert('Use ipfs maddr')
+        return
+      }
       const cid = 'QmeqtCLGLNWsK5djgEN76F2z7gLodWCaWesupKrnGA4TWf'
       log(`Go GraphSync fetch: ${target} ${cid}`)
-      const latency = await window.graphSyncFetch(target, cid)
-      log(`Go GraphSync fetch: ${latency}ms`)
+      const data = await window.graphSyncFetch(target, cid)
+      log(`Go GraphSync fetch:\n${data}\n`)
     }
 
   })

@@ -1,15 +1,20 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"log"
+	"io"
 	"syscall/js"
 
+	"github.com/ipfs/go-blockservice"
 	"github.com/ipfs/go-cid"
 	"github.com/ipfs/go-datastore"
 	dssync "github.com/ipfs/go-datastore/sync"
 	blockstore "github.com/ipfs/go-ipfs-blockstore"
+	offline "github.com/ipfs/go-ipfs-exchange-offline"
+	"github.com/ipfs/go-merkledag"
+	uio "github.com/ipfs/go-unixfs/io"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
@@ -116,17 +121,42 @@ func graphSyncFetch(this js.Value, param []js.Value) interface{} {
 			bs := blockstore.NewBlockstore(dssync.MutexWrap(datastore.NewMapDatastore()))
 			gs, err := newGraphsync(ctx, node, bs)
 			if err != nil {
-				log.Fatal("failed to start", err)
+				fmt.Printf("newGraphsync error %v\n", err)
+				reject.Invoke(js.ValueOf("newGraphsync error"))
+				return
 			}
-			fmt.Printf("Jim gs %v\n", gs)
 
-			/*
-				ch := pingService.Ping(ctx, peer.ID)
-				res := <-ch
-				fmt.Println("pinged", addr, "in", res.RTT)
-				resolve.Invoke(js.ValueOf(res.RTT.Milliseconds()))
-			*/
-			resolve.Invoke(js.ValueOf(0))
+			err = fetch(ctx, gs, peer.ID, target)
+			if err != nil {
+				fmt.Printf("fetch error %v\n", err)
+				reject.Invoke(js.ValueOf("fetch error"))
+				return
+			}
+
+			dag := merkledag.NewDAGService(blockservice.New(bs, offline.Exchange(bs)))
+			root, err := dag.Get(ctx, target)
+			if err != nil {
+				fmt.Printf("get.Get error %v\n", err)
+				reject.Invoke(js.ValueOf("get.Get error"))
+				return
+			}
+
+			reader, err := uio.NewDagReader(ctx, root, dag)
+			if err != nil {
+				fmt.Printf("NewDagReader error %v\n", err)
+				reject.Invoke(js.ValueOf("NewDagReader error"))
+				return
+			}
+
+			buf := new(bytes.Buffer)
+			_, err = io.Copy(buf, reader)
+			if err != nil {
+				fmt.Printf("io.Copy error %v\n", err)
+				reject.Invoke(js.ValueOf("io.Copy error"))
+				return
+			}
+
+			resolve.Invoke(js.ValueOf(buf.String()))
 		}()
 		return nil
 	}
