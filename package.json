@@ -2,7 +2,6 @@
   "name": "libp2p-caddy",
   "version": "1.0.0",
   "description": "Example using parcel + js-libp2p in browser to connect to go-libp2p with Caddy providing SSL proxy",
-  "main": "index.js",
   "browserslist": [
     "last 2 Chrome versions"
   ],
@@ -21,7 +20,8 @@
     "libp2p-noise": "^2.0.1",
     "libp2p-secio": "^0.13.1",
     "libp2p-webrtc-star": "^0.20.1",
-    "libp2p-websockets": "^0.14.0"
+    "libp2p-websockets": "^0.14.0",
+    "pako": "^1.0.11"
   },
   "devDependencies": {
     "parcel": "^2.0.0-beta.1"

@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
   <head>
-    <meta charset="utf-8"/>
-    <title>js-libp2p parcel.js browser example</title>
+    <meta charset="utf-8" />
+    <title>go-graphsync WASM</title>
     <script src="go-wasm/wasm_exec.js"></script>
   </head>
 
   <body>
     <header>
-      <h1 id="status">Starting libp2p...</h1>
+      <h1 id="status">Starting libp2p... (slow, big WASM file loading)</h1>
     </header>
 
     <div>
-      <p>Note: The Peer ID is updated from .env</p>
-      <p>Link to <a href="https://libp2p-caddy-ws.localhost:9056/">go-libp2p-tutorial websocket proxy</a> (for trusting SSL cert).</p>
-      <p>Link to <a href="https://libp2p-caddy-ipfs.localhost:9057/">ipfs websocket proxy</a> (for trusting SSL cert).</p>
       <label>Maddr:</label>
-      <!-- <input type="text" id="maddr" style="width: 80%" value="/ip4/127.0.0.1/tcp/2000/ws/p2p/QmbPkVRVtQnjpZYT7KpxpXAYYFFuzsBPC8o6S2Sypggesr"></div> -->
-      <button id="setIpfsMaddrBtn">Set IPFS MAddr</button>
-      <input type="text" id="maddr" style="width: 80%" value="/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/..."></div>
-      <button id="jsPingBtn" disabled>JS Ping!</button>
-      <button id="goPingBtn" disabled>Go Ping!</button>
-      <button id="goGraphSyncBtn" disabled>Go GraphSync!</button>
+      <input
+        type="text"
+        id="maddr"
+        style="width: 80%"
+        value="/dns4/ipfs.jimpick.com/tcp/10100/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG"
+      />
+      <div>
+        <button id="goPingBtn" disabled>Go Ping!</button>
+        <button id="goGraphSyncBtn" disabled>Go GraphSync!</button>
+      </div>
     </div>
 
     <main>
@@ -31,7 +31,5 @@
     </main>
 
     <script src="./index.js"></script>
-
   </body>
-
 </html>

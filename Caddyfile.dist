@@ -1,0 +1,12 @@
+{
+  admin off
+  https_port 9055
+  http_port 19055
+}
+
+libp2p-caddy.localhost:9055 {
+	log
+
+	  root * /Users/jim/filecoin-jpimac/browser-markets/libp2p-caddy/dist
+	  file_server
+}
