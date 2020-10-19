@@ -20,12 +20,8 @@ require (
 	github.com/multiformats/go-multiaddr v0.3.1
 )
 
-replace github.com/libp2p/go-libp2p => ../../go-libp2p
+replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
 
-replace github.com/libp2p/go-libp2p-core => ../../go-libp2p-core
+replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport v0.1.1-0.20201019202657-b30eedb00d94
 
-replace github.com/libp2p/go-ws-transport => ../../go-ws-transport-0xproject-feat-wss-dialing
-
-replace github.com/libp2p/go-reuseport-transport => ../../go-reuseport-transport
-
-replace github.com/libp2p/go-libp2p-swarm => ../../go-libp2p-swarm
+replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport v0.0.5-0.20201019202422-85fd62f8a44c
