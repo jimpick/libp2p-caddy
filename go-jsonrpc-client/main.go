@@ -11,12 +11,17 @@ import (
 )
 
 func main() {
+	// Jimpick - nuc
+	url := "wss://lotus.jimpick.com/spacerace_api/0/node/rpc/v0"
 	authToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBbGxvdyI6WyJyZWFkIiwid3JpdGUiLCJzaWduIiwiYWRtaW4iXX0.tOXKfED8C-eSNrSwSXtoIR1bGk2znmVs7eRScu1bp40" // already shared publicly
 	headers := http.Header{"Authorization": []string{"Bearer " + authToken}}
-	addr := "10.0.1.52:1234"
+
+	// For https://api.chain.love/
+	// url := "wss://api.chain.love/rpc/v0"
+	// headers := http.Header{}
 
 	var api apistruct.FullNodeStruct
-	closer, err := jsonrpc.NewMergeClient(context.Background(), "ws://"+addr+"/rpc/v0", "Filecoin", []interface{}{&api.Internal, &api.CommonStruct.Internal}, headers)
+	closer, err := jsonrpc.NewMergeClient(context.Background(), url, "Filecoin", []interface{}{&api.Internal, &api.CommonStruct.Internal}, headers)
 	if err != nil {
 		log.Fatalf("connecting with lotus failed: %s", err)
 	}
