@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const setIpfsMaddrButton = document.querySelector('#setIpfsMaddrBtn')
   setIpfsMaddrButton.onclick = async function () {
     document.querySelector('#maddr').value =
-      '/dns4/libp2p-caddy-ipfs.localhost/tcp/9057/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
+      '/dns4/ipfs.jimpick.com/tcp/10100/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
   }
 
   // Export libp2p to the window so you can play with the API
