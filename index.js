@@ -94,5 +94,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`> Data:\n${data}\n`)
     }
 
+    const goChainHeadButton = document.querySelector('#goChainHeadBtn')
+    goChainHeadButton.disabled = false
+    goChainHeadButton.onclick = async function () {
+      log(`Go ChainHead`)
+      const result = await window.chainHead()
+      log(`Go ChainHead: ${result}`)
+    }
+
   })
 })
