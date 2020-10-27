@@ -167,11 +167,12 @@ func graphSyncFetch(this js.Value, param []js.Value) interface{} {
 }
 
 func chainHead(this js.Value, param []js.Value) interface{} {
+	jsHandler := param[0]
 	println("Go chainHead")
 
 	go func() {
 		var api FullNodeStruct
-		closer, err := jsonrpc.NewJsMergeClient(context.Background() /* callback, */, "Filecoin", []interface{}{&api})
+		closer, err := jsonrpc.NewJsMergeClient(context.Background(), jsHandler, "Filecoin", []interface{}{&api})
 		if err != nil {
 			fmt.Printf("connecting with lotus failed: %s\n", err)
 			return

@@ -3,6 +3,7 @@ import Libp2p from 'libp2p'
 import Websockets from 'libp2p-websockets'
 import { NOISE } from 'libp2p-noise'
 import Mplex from 'libp2p-mplex'
+import { BrowserProvider } from './browser-provider'
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Create our libp2p node
@@ -94,11 +95,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`> Data:\n${data}\n`)
     }
 
+    const wsUrl = 'wss://lotus.jimpick.com/spacerace_api/0/node/rpc/v0'
+    const browserProvider = new BrowserProvider(wsUrl)
     const goChainHeadButton = document.querySelector('#goChainHeadBtn')
     goChainHeadButton.disabled = false
     goChainHeadButton.onclick = async function () {
       log(`Go ChainHead`)
-      const result = await window.chainHead()
+      const result = await window.chainHead(async req => {
+        const request = JSON.parse(req)
+        console.log('Js ChainHead request', request)
+        await browserProvider.connect()
+        async function waitForResult () {
+          const result = await browserProvider.sendWs(request)
+          console.log('Jim result', result)
+        }
+        waitForResult()
+        return 'abcde'
+      })
       log(`Go ChainHead: ${result}`)
     }
 
