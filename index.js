@@ -101,16 +101,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     goChainHeadButton.disabled = false
     goChainHeadButton.onclick = async function () {
       log(`Go ChainHead`)
-      const result = await window.chainHead(async req => {
+      const result = await window.chainHead(async (req, responseHandler) => {
         const request = JSON.parse(req)
         console.log('Js ChainHead request', request)
         await browserProvider.connect()
         async function waitForResult () {
           const result = await browserProvider.sendWs(request)
           console.log('Jim result', result)
+          responseHandler(JSON.stringify(result))
         }
         waitForResult()
-        return 'abcde'
+        // return 'abcde'
       })
       log(`Go ChainHead: ${result}`)
     }
