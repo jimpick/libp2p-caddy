@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import Libp2p from 'libp2p'
 import Websockets from 'libp2p-websockets'
 import { NOISE } from 'libp2p-noise'
