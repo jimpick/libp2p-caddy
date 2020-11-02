@@ -18,6 +18,10 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
 
+replace github.com/supranational/blst => ../extern/fil-blst/blst
+
+replace github.com/filecoin-project/fil-blst => ../extern/fil-blst
+
 replace github.com/filecoin-project/lotus => ../../lotus
 
 replace github.com/filecoin-project/go-fil-markets => ../../go-fil-markets
