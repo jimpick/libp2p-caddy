@@ -14,8 +14,10 @@ import (
 	"github.com/libp2p/go-libp2p-peerstore/pstoremem"
 	record "github.com/libp2p/go-libp2p-record"
 
+	"github.com/filecoin-project/go-fil-markets/storagemarket"
 	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/filecoin-project/lotus/lib/peermgr"
+	"github.com/filecoin-project/lotus/markets/storageadapter"
 	"github.com/filecoin-project/lotus/node/modules"
 	"github.com/filecoin-project/lotus/node/modules/dtypes"
 	"github.com/filecoin-project/lotus/node/modules/helpers"
@@ -106,10 +108,10 @@ func Repo(r repo.Repo) Option {
 			Override(new(dtypes.MetadataDS), modules.Datastore),
 			// Override(new(dtypes.ChainBlockstore), modules.ChainBlockstore),
 
-			Override(new(dtypes.ClientImportMgr), modules.ClientImportMgr),
-			// Override(new(dtypes.ClientMultiDstore), rmodules.ClientMultiDatastore),
+			// Override(new(dtypes.ClientImportMgr), modules.ClientImportMgr),
+			// Override(new(dtypes.ClientMultiDstore), modules.ClientMultiDatastore),
 
-			Override(new(dtypes.ClientBlockstore), modules.ClientBlockstore),
+			// Override(new(dtypes.ClientBlockstore), modules.ClientBlockstore),
 			// Override(new(dtypes.ClientRetrievalStoreManager), rmodules.ClientRetrievalStoreManager),
 			Override(new(ci.PrivKey), lp2p.PrivKey),
 			Override(new(ci.PubKey), ci.PrivKey.GetPublic),
@@ -237,12 +239,16 @@ func Online() Option {
 		// Override(new(*discovery.Local), modules.NewLocalDiscovery),
 		// Override(new(retrievalmarket.PeerResolver), modules.RetrievalResolver),
 		// Override(new(retrievalmarket.RetrievalClient), rmodules.RetrievalClient),
-		Override(new(dtypes.ClientDatastore), modules.NewClientDatastore),
+		// Override(new(dtypes.ClientDatastore), modules.NewClientDatastore),
 		// Override(new(dtypes.ClientDataTransfer), modules.NewClientGraphsyncDataTransfer),
 		/*
-				Override(new(modules.ClientDealFunds), modules.NewClientDealFunds),
-				Override(new(storagemarket.StorageClient), modules.StorageClient),
-				Override(new(storagemarket.StorageClientNode), storageadapter.NewClientNodeAdapter),
+			Override(new(modules.ClientDealFunds), modules.NewClientDealFunds),
+		*/
+		Override(new(storagemarket.StorageClient), modules.StorageClient),
+		/*/Client
+		 */
+		Override(new(storagemarket.StorageClientNode), storageadapter.NewClientNodeAdapter),
+		/*
 				Override(new(beacon.Schedule), modules.RandomSchedule),
 
 				Override(new(*paychmgr.Store), paychmgr.NewStore),
@@ -272,8 +278,15 @@ func Online() Option {
 
 				Override(new(*sectorblocks.SectorBlocks), sectorblocks.NewSectorBlocks),
 				Override(new(*storage.Miner), modules.StorageMiner(config.DefaultStorageMiner().Fees)),
-				Override(new(dtypes.NetworkName), modules.StorageNetworkName),
+		*/
+		Override(new(dtypes.NetworkName), modules.StorageNetworkName),
 
+		/*
+			Override(new(moduleapi.ChainModuleAPI), From(new(lotusapi.GatewayAPI))),
+			Override(new(moduleapi.StateModuleAPI), From(new(lotusapi.GatewayAPI))),
+		*/
+
+		/*
 				Override(new(dtypes.StagingMultiDstore), modules.StagingMultiDatastore),
 				Override(new(dtypes.StagingBlockstore), modules.StagingBlockstore),
 				Override(new(dtypes.StagingDAG), modules.StagingDAG),
@@ -308,6 +321,7 @@ func Online() Option {
 				Override(new(dtypes.GetExpectedSealDurationFunc), modules.NewGetExpectedSealDurationFunc),
 			),
 		*/
+
 	)
 }
 
