@@ -9,7 +9,7 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/filecoin-project/go-jsonrpc"
-	"github.com/filecoin-project/lotus/api"
+	lotusapi "github.com/filecoin-project/lotus/api"
 	lcli "github.com/filecoin-project/lotus/cli/cmd"
 	"github.com/filecoin-project/lotus/node/repo"
 	"github.com/jimpick/libp2p-caddy/lotus-client-query-ask-daemon/api"
@@ -24,7 +24,7 @@ var daemonCmd = &cli.Command{
 	Name:  "daemon",
 	Usage: "run client query ask api daemon",
 	Action: func(cctx *cli.Context) error {
-		var queryAskAPI api.FullNodeStruct
+		var queryAskAPI api.QueryAskAPI
 
 		nodeAPI, ncloser, err := lcli.GetFullNodeAPI(cctx)
 		if err != nil {
@@ -47,7 +47,7 @@ var daemonCmd = &cli.Command{
 			node.QueryAskAPI(&queryAskAPI),
 			node.Repo(r),
 			node.Online(),
-			node.Override(new(api.FullNode), nodeAPI),
+			node.Override(new(lotusapi.FullNode), nodeAPI),
 		)
 		if err != nil {
 			return xerrors.Errorf("initializing node: %w", err)

@@ -238,7 +238,7 @@ func Online() Option {
 		// Override(new(retrievalmarket.PeerResolver), modules.RetrievalResolver),
 		// Override(new(retrievalmarket.RetrievalClient), rmodules.RetrievalClient),
 		Override(new(dtypes.ClientDatastore), modules.NewClientDatastore),
-		Override(new(dtypes.ClientDataTransfer), modules.NewClientGraphsyncDataTransfer),
+		// Override(new(dtypes.ClientDataTransfer), modules.NewClientGraphsyncDataTransfer),
 		/*
 				Override(new(modules.ClientDealFunds), modules.NewClientDealFunds),
 				Override(new(storagemarket.StorageClient), modules.StorageClient),
