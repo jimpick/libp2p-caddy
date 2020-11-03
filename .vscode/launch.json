@@ -20,7 +20,9 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/lotus-client-query-ask-daemon",
-      "env": {},
+      "env": {
+        "FULLNODE_API_INFO": "/ip4/10.0.1.52/tcp/1234/http"
+      },
       "args": [ "daemon" ]
     },
 

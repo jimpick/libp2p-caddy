@@ -25,3 +25,9 @@ replace github.com/filecoin-project/fil-blst => ../extern/fil-blst
 replace github.com/filecoin-project/lotus => ../../lotus
 
 replace github.com/filecoin-project/go-fil-markets => ../../go-fil-markets
+
+replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
+
+replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport v0.1.1-0.20201019202657-b30eedb00d94
+
+replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport v0.0.5-0.20201019202422-85fd62f8a44c

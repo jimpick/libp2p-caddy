@@ -54,6 +54,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       '/dns4/ipfs.jimpick.com/tcp/10100/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
   }
 
+  const setMinerMaddrButton = document.querySelector('#setMinerMaddrBtn')
+  setMinerMaddrButton.onclick = async function () {
+    document.querySelector('#maddr').value =
+      '/dns4/lotus.jimpick.com/tcp/10101/wss/p2p/12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5'
+  }
+
   // Export libp2p to the window so you can play with the API
   window.libp2p = libp2p
   console.log('.env PEER_ID:', process.env.PEER_ID)
