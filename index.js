@@ -121,5 +121,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`Go ChainHead: ${result}`)
     }
 
+    queryAskBtn.disabled = false
+    queryAskBtn.onclick = async function () {
+      log(`Query Ask`)
+      const result = await window.clientQueryAsk(async (req, responseHandler) => {
+        /*
+        const request = JSON.parse(req)
+        console.log('Js ChainHead request', request)
+        await browserProvider.connect()
+        async function waitForResult () {
+          const result = await browserProvider.sendWs(request)
+          console.log('Jim result', result)
+          responseHandler(JSON.stringify(result))
+        }
+        waitForResult()
+        // return 'abcde'
+        */
+      })
+      log(`Query Ask: ${result}`)
+    }
+
   })
 })
