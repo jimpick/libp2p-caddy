@@ -18,7 +18,7 @@ func chainHead(this js.Value, param []js.Value) interface{} {
 
 		go func() {
 			var api FullNodeStruct
-			closer, err := jsonrpc.NewJsMergeClient(context.Background(), jsHandler, "Filecoin", []interface{}{&api})
+			closer, err := jsonrpc.NewJSMergeClient(context.Background(), jsHandler, "Filecoin", []interface{}{&api})
 			if err != nil {
 				fmt.Printf("connecting with lotus failed: %s\n", err)
 				return

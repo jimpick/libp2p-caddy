@@ -3,6 +3,9 @@ import Websockets from 'libp2p-websockets'
 import { NOISE } from 'libp2p-noise'
 import Mplex from 'libp2p-mplex'
 import { BrowserProvider } from './browser-provider'
+import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
+import { mainnet } from '@filecoin-shipyard/lotus-client-schema'
+import { WasmProvider } from './wasm-provider'
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Create our libp2p node
@@ -121,6 +124,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`Go ChainHead: ${result}`)
     }
 
+    const wasmProvider = new WasmProvider(wsUrl)
+    const client = new LotusRPC(wasmProvider, { schema: mainnet.fullNode })
+    const goHelloButton = document.querySelector('#goHelloBtn')
+    goHelloButton.disabled = false
+    goHelloButton.onclick = async function () {
+      log(`Go Hello`)
+      const result = await client.version()
+      log(`Go Hello: ${JSON.stringify(result)}`)
+    }
+
+    queryAskBtn.disabled = false
     queryAskBtn.disabled = false
     queryAskBtn.onclick = async function () {
       log(`Query Ask`)

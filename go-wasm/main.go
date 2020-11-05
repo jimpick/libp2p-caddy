@@ -4,6 +4,7 @@ import (
 	"context"
 	"syscall/js"
 
+	"github.com/jimpick/libp2p-caddy/go-wasm/helloservice"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
 	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
@@ -30,6 +31,8 @@ func main() {
 	// configure our own ping protocol
 	pingService = &ping.PingService{Host: node}
 	node.SetStreamHandler(ping.ID, pingService.PingHandler)
+
+	helloservice.Start()
 
 	js.Global().Set("ping", js.FuncOf(pingNode))
 	js.Global().Set("graphSyncFetch", js.FuncOf(graphSyncFetch))

@@ -6,3 +6,4 @@ node_modules
 dist
 .parcel-cache
 .env
+yarn-error.log

@@ -7,7 +7,6 @@ require (
 	github.com/filecoin-project/go-fil-markets v1.0.0
 	github.com/filecoin-project/go-jsonrpc v0.1.2-0.20201008195726-68c6a2704e49
 	github.com/filecoin-project/lotus v1.1.0
-	github.com/githubnemo/CompileDaemon v1.2.1 // indirect
 	github.com/ipfs/go-blockservice v0.1.4-0.20200624145336-a978cec6e834
 	github.com/ipfs/go-cid v0.0.7
 	github.com/ipfs/go-datastore v0.4.5
@@ -19,7 +18,6 @@ require (
 	github.com/ipld/go-ipld-prime v0.5.1-0.20200828233916-988837377a7f
 	github.com/libp2p/go-libp2p v0.11.0
 	github.com/libp2p/go-libp2p-core v0.6.1
-	github.com/libp2p/go-libp2p-nat v0.0.6 // indirect
 	github.com/libp2p/go-ws-transport v0.3.1
 	github.com/multiformats/go-multiaddr v0.3.1
 )
