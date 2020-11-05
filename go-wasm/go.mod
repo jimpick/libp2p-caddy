@@ -4,9 +4,6 @@ go 1.15
 
 require (
 	github.com/filecoin-project/go-address v0.0.4
-	github.com/filecoin-project/go-fil-markets v1.0.0
-	github.com/filecoin-project/go-jsonrpc v0.1.2-0.20201008195726-68c6a2704e49
-	github.com/filecoin-project/lotus v1.1.0
 	github.com/githubnemo/CompileDaemon v1.2.1 // indirect
 	github.com/ipfs/go-blockservice v0.1.4-0.20200624145336-a978cec6e834
 	github.com/ipfs/go-cid v0.0.7
@@ -24,14 +21,9 @@ require (
 	github.com/multiformats/go-multiaddr v0.3.1
 )
 
-replace github.com/filecoin-project/lotus => ../../lotus-wasm
-
-replace github.com/filecoin-project/go-fil-markets => ../../go-fil-markets
-
 replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
 
 replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport v0.1.1-0.20201019202657-b30eedb00d94
 
 replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport v0.0.5-0.20201019202422-85fd62f8a44c
 
-replace github.com/filecoin-project/go-jsonrpc => ../../go-jsonrpc-wasm

@@ -33,7 +33,6 @@ func main() {
 
 	js.Global().Set("ping", js.FuncOf(pingNode))
 	js.Global().Set("graphSyncFetch", js.FuncOf(graphSyncFetch))
-	js.Global().Set("chainHead", js.FuncOf(chainHead))
 	js.Global().Set("clientQueryAsk", js.FuncOf(clientQueryAsk))
 
 	println("WASM Go Initialized 2")
