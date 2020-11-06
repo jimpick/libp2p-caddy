@@ -124,13 +124,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`Go ChainHead: ${result}`)
     }
 
-    const wasmProvider = new WasmProvider(wsUrl)
-    const client = new LotusRPC(wasmProvider, { schema: mainnet.fullNode })
+    const wasmHelloServiceProvider = new WasmProvider(window.connectHelloService)
+    const schema = {
+      methods: {
+        HelloName: {},
+        Version: {}
+      }
+    }
+    const client = new LotusRPC(wasmHelloServiceProvider, { schema })
     const goHelloButton = document.querySelector('#goHelloBtn')
     goHelloButton.disabled = false
     goHelloButton.onclick = async function () {
       log(`Go Hello`)
-      const result = await client.version()
+      const result = await client.helloName('Jim')
       log(`Go Hello: ${JSON.stringify(result)}`)
     }
 

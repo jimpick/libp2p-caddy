@@ -1,13 +1,6 @@
 class WasmProvider {
-  constructor (url, options = {}) {
-    this.url = url
-    this.wsUrl =
-      options.wsUrl || url.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:')
-    this.httpUrl =
-      options.httpUrl || url.replace(/^wss:/, 'https:').replace(/^ws:/, 'http:')
-    this.importUrl =
-      options.importUrl || this.httpUrl.replace(/\/rpc\//, '/rest/') + '/import'
-    this.transport = options.transport || (url.match(/^http/) ? 'http' : 'ws')
+  constructor (wasmConnect, options = {}) {
+    this.wasmConnect = wasmConnect
     this.id = 0
     this.inflight = new Map()
     this.cancelled = new Map()
@@ -20,39 +13,19 @@ class WasmProvider {
         this.url += `?token=${this.token}`
       }
     }
-    this.WebSocket = options.WebSocket || globalThis.WebSocket
-    this.fetch = options.fetch || globalThis.fetch.bind(globalThis)
   }
 
   connect () {
     if (!this.connectPromise) {
       const getConnectPromise = () => {
         return new Promise((resolve, reject) => {
-          if (this.transport !== 'ws') return resolve()
-          this.ws = new this.WebSocket(this.url)
-          // FIXME: reject on error or timeout
-          this.ws.onopen = function () {
-            resolve()
-          }
-          this.ws.onerror = function () {
-            console.error('ws error')
-            reject(new Error('websocket error'))
-          }
-          this.ws.onmessage = this.receive.bind(this)
+          console.log('JimA')
+          this.sendToWasm = this.wasmConnect(this.receive.bind(this))
+          console.log('JimB', this.sendToWasm)
+          resolve()
         })
       }
-      if (this.tokenCallback) {
-        const getToken = async () => {
-          this.token = await this.tokenCallback()
-          delete this.tokenCallback
-          if (this.token && this.token !== '') {
-            this.url += `?token=${this.token}`
-          }
-        }
-        this.connectPromise = getToken().then(() => getConnectPromise())
-      } else {
-        this.connectPromise = getConnectPromise()
-      }
+      this.connectPromise = getConnectPromise()
     }
     return this.connectPromise
   }
@@ -63,41 +36,27 @@ class WasmProvider {
       id: this.id++,
       ...request
     }
-    if (this.transport === 'ws') {
-      return this.sendWs(jsonRpcRequest)
-    } else {
-      return this.sendHttp(jsonRpcRequest)
-    }
-  }
-
-  async sendHttp (jsonRpcRequest) {
-    await this.connect()
-    const headers = {
-      'Content-Type': 'text/plain;charset=UTF-8',
-      Accept: '*/*'
-    }
-    if (this.token) {
-      headers.Authorization = `Bearer ${this.token}`
-    }
-    const response = await this.fetch(this.httpUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(jsonRpcRequest)
+    console.log('Jim send to wasm', jsonRpcRequest)
+    const promise = new Promise((resolve, reject) => {
+      console.log('Jim1', jsonRpcRequest.id, this.sendToWasm)
+      this.inflight.set(jsonRpcRequest.id, (err, result) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+      console.log('Jim2', this.inflight)
+      this.sendToWasm(JSON.stringify(jsonRpcRequest))
+      console.log('Jim3')
+      // FIXME: Add timeout
     })
-    // FIXME: Check return code, errors
-    const { error, result } = await response.json()
-    if (error) {
-      // FIXME: Return error class with error.code
-      throw new Error(error.message)
-    }
-    return result
+    return promise
   }
 
+  /*
   sendWs (jsonRpcRequest) {
     const promise = new Promise((resolve, reject) => {
-      if (this.destroyed) {
-        reject(new Error('WebSocket has already been destroyed'))
-      }
       this.ws.send(JSON.stringify(jsonRpcRequest))
       // FIXME: Add timeout
       this.inflight.set(jsonRpcRequest.id, (err, result) => {
@@ -110,6 +69,7 @@ class WasmProvider {
     })
     return promise
   }
+  */
 
   sendSubscription (request, schemaMethod, subscriptionCb) {
     let chanId = null
@@ -118,6 +78,8 @@ class WasmProvider {
       id: this.id++,
       ...request
     }
+    console.log('Jim send subscription to wasm', jsonRpcRequest)
+    /*
     if (this.transport !== 'ws') {
       return [
         () => {},
@@ -126,6 +88,8 @@ class WasmProvider {
         )
       ]
     }
+    */
+    /*
     const promise = this.connect().then(() => {
       this.ws.send(JSON.stringify(json))
       // FIXME: Add timeout
@@ -165,11 +129,12 @@ class WasmProvider {
         // console.info(`Subscription ${json.id} cancelled, channel ${chanId} closed.`)
       }
     }
+    */
   }
 
-  receive (event) {
+  receive (response) {
     try {
-      const { id, error, result, method, params } = JSON.parse(event.data)
+      const { id, error, result, method, params } = JSON.parse(response)
       // FIXME: Check return code, errors
       if (method === 'xrpc.ch.val') {
         // FIXME: Check return code, errors
@@ -219,32 +184,10 @@ class WasmProvider {
   }
 
   async importFile (body) {
-    await this.connect()
-    const headers = {
-      'Content-Type': body.type,
-      Accept: '*/*',
-      Authorization: `Bearer ${this.token}`
-    }
-    const response = await this.fetch(this.importUrl, {
-      method: 'PUT',
-      headers,
-      body
-    })
-    // FIXME: Check return code, errors
-    const result = await response.json()
-    const {
-      Cid: { '/': cid }
-    } = result
-
-    return cid
+    throw new Error('not implemented')
   }
 
-  async destroy (code = 1000) {
-    // List of codes: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
-    if (this.ws) {
-      this.ws.close(code)
-      this.destroyed = true
-    }
+  async destroy () {
   }
 }
 

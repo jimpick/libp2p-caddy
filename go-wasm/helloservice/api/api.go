@@ -3,6 +3,6 @@ package api
 type HelloAPI struct {
 }
 
-func (api *HelloAPI) Hello(name string) string {
+func (api *HelloAPI) HelloName(name string) string {
 	return "Hello, " + name
 }
