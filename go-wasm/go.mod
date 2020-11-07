@@ -18,8 +18,13 @@ require (
 	github.com/ipld/go-ipld-prime v0.5.1-0.20200828233916-988837377a7f
 	github.com/libp2p/go-libp2p v0.11.0
 	github.com/libp2p/go-libp2p-core v0.6.1
+	github.com/libp2p/go-libp2p-peer v0.2.0
+	github.com/libp2p/go-libp2p-peerstore v0.2.6
+	github.com/libp2p/go-libp2p-record v0.1.3
 	github.com/libp2p/go-ws-transport v0.3.1
 	github.com/multiformats/go-multiaddr v0.3.1
+	go.uber.org/fx v1.9.0
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
 
 replace github.com/filecoin-project/lotus => ../../lotus-wasm
