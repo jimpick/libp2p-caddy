@@ -5,6 +5,7 @@ import (
 	"syscall/js"
 
 	"github.com/jimpick/libp2p-caddy/go-wasm/helloservice"
+	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
 	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
@@ -32,12 +33,13 @@ func main() {
 	pingService = &ping.PingService{Host: node}
 	node.SetStreamHandler(ping.ID, pingService.PingHandler)
 
+	// APIs
 	helloservice.Start()
+	queryaskservice.Start()
 
 	js.Global().Set("ping", js.FuncOf(pingNode))
 	js.Global().Set("graphSyncFetch", js.FuncOf(graphSyncFetch))
 	js.Global().Set("chainHead", js.FuncOf(chainHead))
-	js.Global().Set("clientQueryAsk", js.FuncOf(clientQueryAsk))
 
 	println("WASM Go Initialized 2")
 

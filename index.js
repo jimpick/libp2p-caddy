@@ -124,42 +124,39 @@ document.addEventListener('DOMContentLoaded', async () => {
       log(`Go ChainHead: ${result}`)
     }
 
-    const wasmHelloServiceProvider = new WasmProvider(window.connectHelloService)
     const schema = {
       methods: {
-        HelloName: {},
-        Version: {}
+        HelloName: {}
       }
     }
-    const client = new LotusRPC(wasmHelloServiceProvider, { schema })
+
+    const wasmHelloServiceProvider = new WasmProvider(
+      window.connectHelloService
+    )
+    const helloClient = new LotusRPC(wasmHelloServiceProvider, { schema })
     const goHelloButton = document.querySelector('#goHelloBtn')
     goHelloButton.disabled = false
     goHelloButton.onclick = async function () {
       log(`Go Hello`)
-      const result = await client.helloName('Jim')
+      const result = await helloClient.helloName('Jim')
       log(`Go Hello: ${JSON.stringify(result)}`)
     }
 
+    const wasmQueryAskServiceProvider = new WasmProvider(
+      window.connectQueryAskService
+    )
+    const queryAskClient = new LotusRPC(wasmQueryAskServiceProvider, {
+      schema: mainnet.fullNode
+    })
     queryAskBtn.disabled = false
     queryAskBtn.disabled = false
     queryAskBtn.onclick = async function () {
       log(`Query Ask`)
-      const result = await window.clientQueryAsk(async (req, responseHandler) => {
-        /*
-        const request = JSON.parse(req)
-        console.log('Js ChainHead request', request)
-        await browserProvider.connect()
-        async function waitForResult () {
-          const result = await browserProvider.sendWs(request)
-          console.log('Jim result', result)
-          responseHandler(JSON.stringify(result))
-        }
-        waitForResult()
-        // return 'abcde'
-        */
-      })
-      log(`Query Ask: ${result}`)
+      const result = await queryAskClient.clientQueryAsk(
+        '12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5',
+        'f063655'
+      )
+      log(`Query Ask: ${JSON.stringify(result)}`)
     }
-
   })
 })
