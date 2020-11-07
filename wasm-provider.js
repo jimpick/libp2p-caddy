@@ -13,6 +13,7 @@ class WasmProvider {
         this.url += `?token=${this.token}`
       }
     }
+    this.options = options
   }
 
   connect () {
@@ -20,7 +21,10 @@ class WasmProvider {
       const getConnectPromise = () => {
         return new Promise((resolve, reject) => {
           console.log('JimA')
-          this.sendToWasm = this.wasmConnect(this.receive.bind(this))
+          this.sendToWasm = this.wasmConnect(
+            this.receive.bind(this),
+            this.options && this.options.environment
+          )
           console.log('JimB', this.sendToWasm)
           resolve()
         })
@@ -187,8 +191,7 @@ class WasmProvider {
     throw new Error('not implemented')
   }
 
-  async destroy () {
-  }
+  async destroy () {}
 }
 
 export { WasmProvider }

@@ -154,7 +154,7 @@ func Online() Option {
 
 		libp2p(),
 
-		Override(new(dtypes.BootstrapPeers), modules.BuiltinBootstrap),
+		// Override(new(dtypes.BootstrapPeers), modules.BuiltinBootstrap),
 		Override(new(*peermgr.PeerMgr), peermgr.NewPeerMgr),
 		Override(RunPeerMgrKey, modules.RunPeerMgr),
 		Override(new(storagemarket.StorageClient), modules.StorageClient),

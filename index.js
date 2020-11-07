@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   WebAssembly.instantiateStreaming(
     fetch('go-wasm/main.wasm'),
     go.importObject
-  ).then(result => {
+  ).then(async result => {
     status.innerText = 'All systems good! JS and Go loaded.'
     go.run(result.instance)
 
@@ -105,14 +105,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const wsUrl = 'wss://lotus.jimpick.com/spacerace_api/0/node/rpc/v0'
     const browserProvider = new BrowserProvider(wsUrl)
-    const goChainHeadButton = document.querySelector('#goChainHeadBtn')
-    goChainHeadButton.disabled = false
-    goChainHeadButton.onclick = async function () {
-      log(`Go ChainHead`)
-      const result = await window.chainHead(async (req, responseHandler) => {
+    await browserProvider.connect()
+    const requestsForLotusHandler = async (req, responseHandler) => {
         const request = JSON.parse(req)
-        console.log('Js ChainHead request', request)
-        await browserProvider.connect()
+        console.log('JSON-RPC request => Lotus', request)
         async function waitForResult () {
           const result = await browserProvider.sendWs(request)
           console.log('Jim result', result)
@@ -120,7 +116,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         waitForResult()
         // return 'abcde'
-      })
+      }
+
+    const goChainHeadButton = document.querySelector('#goChainHeadBtn')
+    goChainHeadButton.disabled = false
+    goChainHeadButton.onclick = async function () {
+      log(`Go ChainHead`)
+      const result = await window.chainHead(requestsForLotusHandler)
       log(`Go ChainHead: ${result}`)
     }
 
@@ -143,7 +145,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const wasmQueryAskServiceProvider = new WasmProvider(
-      window.connectQueryAskService
+      window.connectQueryAskService,
+      {
+        environment: {
+          requestsForLotusHandler
+        }
+      }
     )
     const queryAskClient = new LotusRPC(wasmQueryAskServiceProvider, {
       schema: mainnet.fullNode
