@@ -6,6 +6,7 @@ import (
 	"syscall/js"
 
 	"github.com/filecoin-project/go-jsonrpc"
+	lotusapi "github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/api/apistruct"
 	"github.com/filecoin-project/lotus/node/modules/lp2p"
 	"github.com/filecoin-project/lotus/node/modules/moduleapi"
@@ -17,7 +18,7 @@ import (
 var jsHandler js.Value
 
 func Start() {
-	var queryAskAPI api.QueryAskAPI
+	var queryAskAPI api.QueryAskAPI = api.QueryAskAPI{}
 
 	ctx := context.Background()
 
@@ -28,10 +29,17 @@ func Start() {
 		panic(err)
 	}
 
-	nodeAPI := &apistruct.FullNodeStruct{}
+	var nodeAPI lotusapi.FullNode
+	var closer jsonrpc.ClientCloser
+	nodeAPI = &apistruct.FullNodeStruct{}
+	defer func() {
+		if closer != nil {
+			closer()
+		}
+	}()
 
 	_, err = node.New(ctx,
-		node.QueryAskAPI(&queryAskAPI),
+		// node.QueryAskAPI(&queryAskAPI),
 		node.Repo(r),
 		node.Online(),
 		node.Override(new(lp2p.BaseIpfsRouting), nilRouting),
@@ -43,10 +51,25 @@ func Start() {
 	}
 
 	cbOpt := jsonrpc.WithConnectCallback(func(environment js.Value) {
-		fmt.Println("Jim ConnectCallback", environment)
+		fmt.Println("Jim ConnectCallback")
+		requestsForLotusHandler := environment.Get("requestsForLotusHandler")
+		jim := environment.Get("jim")
+		fmt.Println("JimX", jim)
+
+		var res apistruct.FullNodeStruct
+		// closer, err := jsonrpc.NewJSMergeClient(context.Background(), requestsForLotusHandler, "Filecoin", []interface{}{&nodeAPI})
+		closer, err = jsonrpc.NewJSMergeClient(context.Background(), requestsForLotusHandler, "Filecoin",
+			[]interface{}{
+				&res.CommonStruct.Internal,
+				&res.Internal,
+			})
+		if err != nil {
+			fmt.Printf("connecting with lotus failed: %s\n", err)
+			panic(err)
+		}
 	})
 	fmt.Println("Jim1")
 	rpcServer := jsonrpc.NewJSServer("connectQueryAskService", cbOpt)
 	fmt.Println("Jim2")
-	rpcServer.Register("Filecoin", queryAskAPI)
+	rpcServer.Register("Filecoin", &queryAskAPI)
 }

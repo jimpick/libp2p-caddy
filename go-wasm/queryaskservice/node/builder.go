@@ -27,8 +27,8 @@ import (
 	"github.com/filecoin-project/lotus/node/modules/helpers"
 	"github.com/filecoin-project/lotus/node/modules/lp2p"
 	"github.com/filecoin-project/lotus/node/repo"
-	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/api"
-	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node/impl"
+
+	// "github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node/impl"
 	"go.uber.org/fx"
 	"golang.org/x/xerrors"
 )
@@ -154,7 +154,7 @@ func Online() Option {
 
 		libp2p(),
 
-		// Override(new(dtypes.BootstrapPeers), modules.BuiltinBootstrap),
+		Override(new(dtypes.BootstrapPeers), modules.BuiltinBootstrap),
 		Override(new(*peermgr.PeerMgr), peermgr.NewPeerMgr),
 		Override(RunPeerMgrKey, modules.RunPeerMgr),
 		Override(new(storagemarket.StorageClient), modules.StorageClient),
@@ -163,6 +163,7 @@ func Online() Option {
 	)
 }
 
+/*
 func QueryAskAPI(out *api.QueryAskAPI) Option {
 	return Options(
 		func(s *Settings) error {
@@ -177,6 +178,7 @@ func QueryAskAPI(out *api.QueryAskAPI) Option {
 		},
 	)
 }
+*/
 
 func defaults() []Option {
 	return []Option{
