@@ -18,7 +18,7 @@ import (
 var jsHandler js.Value
 
 func Start() {
-	var queryAskAPI api.QueryAskAPI = api.QueryAskAPI{}
+	var queryAskAPI api.QueryAskAPI
 
 	ctx := context.Background()
 
@@ -29,9 +29,9 @@ func Start() {
 		panic(err)
 	}
 
-	var nodeAPI lotusapi.FullNode
+	var fullNodeStruct = apistruct.FullNodeStruct{}
+	var nodeAPI lotusapi.FullNode = &fullNodeStruct
 	var closer jsonrpc.ClientCloser
-	nodeAPI = &apistruct.FullNodeStruct{}
 	defer func() {
 		if closer != nil {
 			closer()
@@ -39,7 +39,7 @@ func Start() {
 	}()
 
 	_, err = node.New(ctx,
-		// node.QueryAskAPI(&queryAskAPI),
+		node.QueryAskAPI(&queryAskAPI),
 		node.Repo(r),
 		node.Online(),
 		node.Override(new(lp2p.BaseIpfsRouting), nilRouting),
@@ -51,25 +51,19 @@ func Start() {
 	}
 
 	cbOpt := jsonrpc.WithConnectCallback(func(environment js.Value) {
-		fmt.Println("Jim ConnectCallback")
 		requestsForLotusHandler := environment.Get("requestsForLotusHandler")
-		jim := environment.Get("jim")
-		fmt.Println("JimX", jim)
 
-		var res apistruct.FullNodeStruct
 		// closer, err := jsonrpc.NewJSMergeClient(context.Background(), requestsForLotusHandler, "Filecoin", []interface{}{&nodeAPI})
 		closer, err = jsonrpc.NewJSMergeClient(context.Background(), requestsForLotusHandler, "Filecoin",
 			[]interface{}{
-				&res.CommonStruct.Internal,
-				&res.Internal,
+				&fullNodeStruct.CommonStruct.Internal,
+				&fullNodeStruct.Internal,
 			})
 		if err != nil {
 			fmt.Printf("connecting with lotus failed: %s\n", err)
 			panic(err)
 		}
 	})
-	fmt.Println("Jim1")
 	rpcServer := jsonrpc.NewJSServer("connectQueryAskService", cbOpt)
-	fmt.Println("Jim2")
-	rpcServer.Register("Filecoin", &queryAskAPI)
+	rpcServer.Register("Filecoin", queryAskAPI)
 }

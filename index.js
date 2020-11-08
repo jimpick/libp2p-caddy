@@ -148,8 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.connectQueryAskService,
       {
         environment: {
-          requestsForLotusHandler,
-          jim: "Jim"
+          requestsForLotusHandler
         }
       }
     )

@@ -28,7 +28,8 @@ import (
 	"github.com/filecoin-project/lotus/node/modules/lp2p"
 	"github.com/filecoin-project/lotus/node/repo"
 
-	// "github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node/impl"
+	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/api"
+	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node/impl"
 	"go.uber.org/fx"
 	"golang.org/x/xerrors"
 )
@@ -163,13 +164,8 @@ func Online() Option {
 	)
 }
 
-/*
 func QueryAskAPI(out *api.QueryAskAPI) Option {
 	return Options(
-		func(s *Settings) error {
-			s.nodeType = repo.Worker
-			return nil
-		},
 		func(s *Settings) error {
 			resAPI := &impl.QueryAskAPI{}
 			s.invokes[ExtractApiKey] = fx.Populate(resAPI)
@@ -178,7 +174,6 @@ func QueryAskAPI(out *api.QueryAskAPI) Option {
 		},
 	)
 }
-*/
 
 func defaults() []Option {
 	return []Option{
