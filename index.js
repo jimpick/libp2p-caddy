@@ -55,6 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       '/dns4/ipfs.jimpick.com/tcp/10100/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG'
   }
 
+  const setRelayMaddrButton = document.querySelector('#setRelayMaddrBtn')
+  setRelayMaddrButton.onclick = async function () {
+    document.querySelector('#maddr').value =
+      '/dns4/ipfs.jimpick.com/tcp/10100/wss/p2p/QmScdku7gc3VvfZZvT8kHU77bt6bnH3PnGXkyFRZ17g9EG/p2p-circuit/ip4/80.82.17.10/tcp/9999/p2p/12D3KooWDMpcct12Vb6jPXwjvLQHA2hoP8XKGbUZ2tpue1ydoZUm'
+  }
+
   // Export libp2p to the window so you can play with the API
   window.libp2p = libp2p
   console.log('.env PEER_ID:', process.env.PEER_ID)
