@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function log (txt) {
     console.info(txt)
-    output.textContent += `${txt.trim()}\n`
+    const divEl = document.createElement('div')
+    divEl.textContent = txt.trim()
+    output.appendChild(divEl)
   }
 
   // Listen for new connections to peers
