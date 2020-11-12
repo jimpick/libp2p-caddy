@@ -165,6 +165,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         '12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5',
         'f063655'
       )
+      /*
+      const result = await queryAskClient.clientQueryAsk(
+        '12D3KooWDMpcct12Vb6jPXwjvLQHA2hoP8XKGbUZ2tpue1ydoZUm',
+        'f02620'
+      )
+      */
       log(`Query Ask: ${JSON.stringify(result)}`)
     }
   })

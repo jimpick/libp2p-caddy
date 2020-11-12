@@ -45,3 +45,11 @@ libp2p-caddy-ipfs.localhost:9057 {
 	}
 }
 
+libp2p-caddy-relay.localhost:9058 {
+	log
+
+	route * {
+	  reverse_proxy localhost:2010
+	}
+}
+
