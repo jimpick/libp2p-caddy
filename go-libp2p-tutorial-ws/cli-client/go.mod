@@ -1,4 +1,4 @@
-module github.com/jimpick/libp2p-caddy/go-libp2p-tutorial/cli-client
+module github.com/jimpick/libp2p-caddy/go-libp2p-tutorial-ws/cli-client
 
 go 1.14
 

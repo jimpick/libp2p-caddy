@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/libp2p/go-libp2p"
+	"github.com/libp2p/go-libp2p-core/network"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
 	ws "github.com/libp2p/go-ws-transport"
 )
@@ -25,6 +26,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	node.SetStreamHandler("/cats", func(s network.Stream) {
+		fmt.Println("Meow! It worked!")
+		_, err = s.Write([]byte("Meow!"))
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+		s.Close()
+	})
 
 	// print the node's listening addresses
 	fmt.Println("Listen addresses:", node.Addrs())

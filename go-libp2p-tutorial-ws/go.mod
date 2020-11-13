@@ -1,4 +1,4 @@
-module github.com/jimpick/libp2p-caddy/go-libp2p-tutorial
+module github.com/jimpick/libp2p-caddy/go-libp2p-tutorial-ws
 
 go 1.14
 
