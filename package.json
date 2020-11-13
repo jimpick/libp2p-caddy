@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "caddy": "caddy run --config Caddyfile.dev",
-    "start": "parcel index.js"
+    "start": "cat .env.* > .env && rm -rf .parcel-cache && parcel index.js"
   },
   "keywords": [],
   "author": "Jim Pick (@jimpick)",

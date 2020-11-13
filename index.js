@@ -67,9 +67,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Export libp2p to the window so you can play with the API
   window.libp2p = libp2p
-  console.log('.env PEER_ID:', process.env.PEER_ID)
+  console.log('.env PEER_ID_WS:', process.env.PEER_ID_WS)
+  console.log('.env PEER_ID_TCP:', process.env.PEER_ID_TCP)
   document.querySelector('#maddr').value =
-    '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID
+    '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID_WS
 
   const go = new Go()
   WebAssembly.instantiateStreaming(

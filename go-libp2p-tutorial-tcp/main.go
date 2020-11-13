@@ -11,7 +11,6 @@ import (
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/network"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
-	ws "github.com/libp2p/go-ws-transport"
 )
 
 func main() {
@@ -20,8 +19,7 @@ func main() {
 
 	// start a libp2p node with default settings
 	node, err := libp2p.New(ctx,
-		libp2p.Transport(ws.New),
-		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/2000/ws"),
+		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/2020"),
 	)
 	if err != nil {
 		panic(err)
@@ -47,8 +45,8 @@ func main() {
 	addrs, err := peerstore.AddrInfoToP2pAddrs(&peerInfo)
 	fmt.Println("libp2p node address:", addrs[0])
 
-	dotEnvContents := []byte("PEER_ID_WS=" + node.ID().Pretty() + "\n")
-	err = ioutil.WriteFile("../.env.ws", dotEnvContents, 0644)
+	dotEnvContents := []byte("PEER_ID_TCP=" + node.ID().Pretty() + "\n")
+	err = ioutil.WriteFile("../.env.tcp", dotEnvContents, 0644)
 	if err != nil {
 		panic(err)
 	}
