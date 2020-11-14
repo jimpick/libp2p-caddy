@@ -1,4 +1,4 @@
-package streamfromwsservice
+package streamfromtcpservice
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	multiaddr "github.com/multiformats/go-multiaddr"
 )
 
-type StreamFromWSService struct {
+type StreamFromTCPService struct {
 	Node *host.Host
 }
 
@@ -20,11 +20,11 @@ type StreamFromWSService struct {
 
 // See: https://withblue.ink/2020/10/03/go-webassembly-http-requests-and-promises.html
 
-func (sfwss *StreamFromWSService) GetStream(this js.Value, param []js.Value) interface{} {
+func (sfwss *StreamFromTCPService) GetStream(this js.Value, param []js.Value) interface{} {
 	maddr := param[0].String()
 	println("Go maddr: ", maddr)
 
-	streamFromWSHandler := func(this js.Value, args []js.Value) interface{} {
+	streamFromTCPHandler := func(this js.Value, args []js.Value) interface{} {
 		resolve := args[0]
 		reject := args[1]
 
@@ -64,5 +64,5 @@ func (sfwss *StreamFromWSService) GetStream(this js.Value, param []js.Value) int
 	}
 
 	promiseConstructor := js.Global().Get("Promise")
-	return promiseConstructor.New(js.FuncOf(streamFromWSHandler))
+	return promiseConstructor.New(js.FuncOf(streamFromTCPHandler))
 }

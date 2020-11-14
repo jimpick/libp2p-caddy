@@ -53,3 +53,11 @@ libp2p-caddy-relay.localhost:9058 {
 	}
 }
 
+libp2p-caddy-p2pd.localhost:9059 {
+	log
+
+	route * {
+	  reverse_proxy localhost:2030
+	}
+}
+

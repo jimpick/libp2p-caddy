@@ -98,6 +98,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`Go Stream from WS result: ${result}`)
   }
 
+  const goStreamTcpButton = document.querySelector('#goStreamTcpBtn')
+  goStreamTcpButton.disabled = false
+  goStreamTcpButton.onclick = async function () {
+    const target = document.querySelector('#maddr').value
+    log(`Go Stream From TCP: ${target}`)
+    const result = await window.streamFromTcp(target)
+    log(`Go Stream from TCP result: ${result}`)
+  }
+
   const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
   goGraphSyncButton.disabled = false
   goGraphSyncButton.onclick = async function () {

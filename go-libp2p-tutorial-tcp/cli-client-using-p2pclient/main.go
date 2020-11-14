@@ -11,7 +11,8 @@ import (
 )
 
 func main() {
-	controlMaddr, _ := multiaddr.NewMultiaddr("/unix/tmp/p2pd.sock")
+	// controlMaddr, _ := multiaddr.NewMultiaddr("/unix/tmp/p2pd.sock")
+	controlMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/2030/ws")
 	listenMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/0")
 
 	node, err := p2pclient.NewClient(controlMaddr, listenMaddr)

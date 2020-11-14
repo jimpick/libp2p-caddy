@@ -7,6 +7,7 @@ import (
 	"github.com/jimpick/libp2p-caddy/go-wasm/helloservice"
 	"github.com/jimpick/libp2p-caddy/go-wasm/pingservice"
 	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice"
+	"github.com/jimpick/libp2p-caddy/go-wasm/streamfromtcpservice"
 	"github.com/jimpick/libp2p-caddy/go-wasm/streamfromwsservice"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
@@ -48,10 +49,15 @@ func main() {
 		Node: &node,
 	}
 
+	sftcps := streamfromtcpservice.StreamFromTCPService{
+		Node: &node,
+	}
+
 	js.Global().Set("ping", js.FuncOf(ping.PingNode))
 	js.Global().Set("graphSyncFetch", js.FuncOf(graphSyncFetch))
 	js.Global().Set("chainHead", js.FuncOf(chainHead))
 	js.Global().Set("streamFromWs", js.FuncOf(sfwss.GetStream))
+	js.Global().Set("streamFromTcp", js.FuncOf(sftcps.GetStream))
 
 	println("WASM Go Initialized 2")
 
