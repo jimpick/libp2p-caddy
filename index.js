@@ -73,106 +73,103 @@ document.addEventListener('DOMContentLoaded', async () => {
     '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID_WS
 
   const go = new Go()
-  WebAssembly.instantiateStreaming(
+  const result = await WebAssembly.instantiateStreaming(
     fetch('go-wasm/main.wasm'),
     go.importObject
-  ).then(async result => {
-    status.innerText = 'All systems good! JS and Go loaded.'
-    go.run(result.instance)
+  )
+  status.innerText = 'All systems good! JS and Go loaded.'
+  go.run(result.instance)
 
-    // FIXME Add callback for ready state
-    const goPingButton = document.querySelector('#goPingBtn')
-    goPingButton.disabled = false
-    goPingButton.onclick = async function () {
-      const target = document.querySelector('#maddr').value
-      log(`Go Ping: ${target}`)
-      const latency = await window.ping(target)
-      log(`Go Pong: ${latency}ms`)
+  // FIXME Add callback for ready state
+  const goPingButton = document.querySelector('#goPingBtn')
+  goPingButton.disabled = false
+  goPingButton.onclick = async function () {
+    const target = document.querySelector('#maddr').value
+    log(`Go Ping: ${target}`)
+    const latency = await window.ping(target)
+    log(`Go Pong: ${latency}ms`)
+  }
+
+  const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
+  goGraphSyncButton.disabled = false
+  goGraphSyncButton.onclick = async function () {
+    const target = document.querySelector('#maddr').value
+    if (!target.match(/ipfs/)) {
+      alert('Use ipfs maddr')
+      return
     }
+    const cid = 'QmeqtCLGLNWsK5djgEN76F2z7gLodWCaWesupKrnGA4TWf'
+    log(`Go GraphSync fetch:\n`)
+    log(`> Maddr: ${target}`)
+    log(`> CID: ${cid}`)
+    const data = await window.graphSyncFetch(target, cid)
+    log(`> Data:\n${data}\n`)
+  }
 
-    const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
-    goGraphSyncButton.disabled = false
-    goGraphSyncButton.onclick = async function () {
-      const target = document.querySelector('#maddr').value
-      if (!target.match(/ipfs/)) {
-        alert('Use ipfs maddr')
-        return
+  const wsUrl = 'wss://lotus.jimpick.com/spacerace_api/0/node/rpc/v0'
+  const browserProvider = new BrowserProvider(wsUrl)
+  await browserProvider.connect()
+  const requestsForLotusHandler = async (req, responseHandler) => {
+    const request = JSON.parse(req)
+    console.log('JSON-RPC request => Lotus', request)
+    async function waitForResult () {
+      const result = await browserProvider.sendWs(request)
+      console.log('Jim result', result)
+      responseHandler(JSON.stringify(result))
+    }
+    waitForResult()
+    // return 'abcde'
+  }
+
+  const goChainHeadButton = document.querySelector('#goChainHeadBtn')
+  goChainHeadButton.disabled = false
+  goChainHeadButton.onclick = async function () {
+    log(`Go ChainHead`)
+    const result = await window.chainHead(requestsForLotusHandler)
+    log(`Go ChainHead: ${result}`)
+  }
+
+  const schema = {
+    methods: {
+      HelloName: {}
+    }
+  }
+
+  const wasmHelloServiceProvider = new WasmProvider(window.connectHelloService)
+  const helloClient = new LotusRPC(wasmHelloServiceProvider, { schema })
+  const goHelloButton = document.querySelector('#goHelloBtn')
+  goHelloButton.disabled = false
+  goHelloButton.onclick = async function () {
+    log(`Go Hello`)
+    const result = await helloClient.helloName('Jim')
+    log(`Go Hello: ${JSON.stringify(result)}`)
+  }
+
+  const wasmQueryAskServiceProvider = new WasmProvider(
+    window.connectQueryAskService,
+    {
+      environment: {
+        requestsForLotusHandler
       }
-      const cid = 'QmeqtCLGLNWsK5djgEN76F2z7gLodWCaWesupKrnGA4TWf'
-      log(`Go GraphSync fetch:\n`)
-      log(`> Maddr: ${target}`)
-      log(`> CID: ${cid}`)
-      const data = await window.graphSyncFetch(target, cid)
-      log(`> Data:\n${data}\n`)
     }
-
-    const wsUrl = 'wss://lotus.jimpick.com/spacerace_api/0/node/rpc/v0'
-    const browserProvider = new BrowserProvider(wsUrl)
-    await browserProvider.connect()
-    const requestsForLotusHandler = async (req, responseHandler) => {
-        const request = JSON.parse(req)
-        console.log('JSON-RPC request => Lotus', request)
-        async function waitForResult () {
-          const result = await browserProvider.sendWs(request)
-          console.log('Jim result', result)
-          responseHandler(JSON.stringify(result))
-        }
-        waitForResult()
-        // return 'abcde'
-      }
-
-    const goChainHeadButton = document.querySelector('#goChainHeadBtn')
-    goChainHeadButton.disabled = false
-    goChainHeadButton.onclick = async function () {
-      log(`Go ChainHead`)
-      const result = await window.chainHead(requestsForLotusHandler)
-      log(`Go ChainHead: ${result}`)
-    }
-
-    const schema = {
-      methods: {
-        HelloName: {}
-      }
-    }
-
-    const wasmHelloServiceProvider = new WasmProvider(
-      window.connectHelloService
+  )
+  const queryAskClient = new LotusRPC(wasmQueryAskServiceProvider, {
+    schema: mainnet.fullNode
+  })
+  queryAskBtn.disabled = false
+  queryAskBtn.disabled = false
+  queryAskBtn.onclick = async function () {
+    log(`Query Ask`)
+    const result = await queryAskClient.clientQueryAsk(
+      '12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5',
+      'f063655'
     )
-    const helloClient = new LotusRPC(wasmHelloServiceProvider, { schema })
-    const goHelloButton = document.querySelector('#goHelloBtn')
-    goHelloButton.disabled = false
-    goHelloButton.onclick = async function () {
-      log(`Go Hello`)
-      const result = await helloClient.helloName('Jim')
-      log(`Go Hello: ${JSON.stringify(result)}`)
-    }
-
-    const wasmQueryAskServiceProvider = new WasmProvider(
-      window.connectQueryAskService,
-      {
-        environment: {
-          requestsForLotusHandler
-        }
-      }
-    )
-    const queryAskClient = new LotusRPC(wasmQueryAskServiceProvider, {
-      schema: mainnet.fullNode
-    })
-    queryAskBtn.disabled = false
-    queryAskBtn.disabled = false
-    queryAskBtn.onclick = async function () {
-      log(`Query Ask`)
-      const result = await queryAskClient.clientQueryAsk(
-        '12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5',
-        'f063655'
-      )
-      /*
+    /*
       const result = await queryAskClient.clientQueryAsk(
         '12D3KooWDMpcct12Vb6jPXwjvLQHA2hoP8XKGbUZ2tpue1ydoZUm',
         'f02620'
       )
       */
-      log(`Query Ask: ${JSON.stringify(result)}`)
-    }
-  })
+    log(`Query Ask: ${JSON.stringify(result)}`)
+  }
 })

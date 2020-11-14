@@ -1,20 +1,27 @@
-package main
+package pingservice
 
 import (
 	"context"
 	"fmt"
 	"syscall/js"
 
+	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
 	multiaddr "github.com/multiformats/go-multiaddr"
 )
+
+type PingService struct {
+	Node        *host.Host
+	PingService *ping.PingService
+}
 
 // The following functions implement a window.ping() entrypoint callable from
 // JS that returns a promise.
 
 // See: https://withblue.ink/2020/10/03/go-webassembly-http-requests-and-promises.html
 
-func pingNode(this js.Value, param []js.Value) interface{} {
+func (p *PingService) PingNode(this js.Value, param []js.Value) interface{} {
 	maddr := param[0].String()
 	println("Go maddr: ", maddr)
 
@@ -40,13 +47,13 @@ func pingNode(this js.Value, param []js.Value) interface{} {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
-			if err := node.Connect(ctx, *peer); err != nil {
+			if err := (*p.Node).Connect(ctx, *peer); err != nil {
 				fmt.Printf("Connect error %v\n", err)
 				reject.Invoke(js.ValueOf("Connect error"))
 				return
 			}
 
-			ch := pingService.Ping(ctx, peer.ID)
+			ch := p.PingService.Ping(ctx, peer.ID)
 			res := <-ch
 			fmt.Println("pinged", addr, "in", res.RTT)
 			resolve.Invoke(js.ValueOf(res.RTT.Milliseconds()))

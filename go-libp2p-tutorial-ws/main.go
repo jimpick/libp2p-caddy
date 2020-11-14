@@ -29,7 +29,7 @@ func main() {
 
 	node.SetStreamHandler("/cats", func(s network.Stream) {
 		fmt.Println("Meow! It worked!")
-		_, err = s.Write([]byte("Meow!"))
+		_, err = s.Write([]byte("Meow via WS!"))
 		if err != nil {
 			fmt.Println("Error", err)
 		}
