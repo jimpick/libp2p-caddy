@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   status.innerText = 'All systems good! JS and Go loaded.'
   go.run(result.instance)
 
-  // FIXME Add callback for ready state
   const goPingButton = document.querySelector('#goPingBtn')
   goPingButton.disabled = false
   goPingButton.onclick = async function () {
@@ -88,6 +87,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`Go Ping: ${target}`)
     const latency = await window.ping(target)
     log(`Go Pong: ${latency}ms`)
+  }
+
+  const goStreamWsButton = document.querySelector('#goStreamWsBtn')
+  goStreamWsButton.disabled = false
+  goStreamWsButton.onclick = async function () {
+    const target = document.querySelector('#maddr').value
+    log(`Go Stream From WS: ${target}`)
+    const result = await window.streamFromWs(target)
+    log(`Go Stream from WS result: ${result}`)
   }
 
   const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
