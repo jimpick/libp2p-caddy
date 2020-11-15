@@ -12,9 +12,11 @@ import (
 
 func main() {
 	// controlMaddr, _ := multiaddr.NewMultiaddr("/unix/tmp/p2pd.sock")
-	controlMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/2030/ws")
+	// controlMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/2030/ws") // works
+	controlMaddr, _ := multiaddr.NewMultiaddr("/dns4/libp2p-caddy-p2pd.localhost/tcp/9059/wss")
 	listenMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/0")
 
+	fmt.Println("Jim1")
 	node, err := p2pclient.NewClient(controlMaddr, listenMaddr)
 	// start a libp2p node that listens on a random local TCP port,
 	// but without running the built-in ping protocol
@@ -27,6 +29,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Jim2")
 
 	// configure our own ping protocol
 	/*
@@ -35,6 +38,7 @@ func main() {
 	*/
 
 	nodeID, nodeAddrs, err := node.Identify()
+	fmt.Println("Jim3")
 
 	// print the node's PeerInfo in multiaddr format
 	peerInfo := peerstore.AddrInfo{
