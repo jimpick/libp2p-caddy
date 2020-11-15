@@ -1,18 +1,17 @@
 package streamfromtcpservice
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"syscall/js"
 
-	"github.com/libp2p/go-libp2p-core/host"
 	peerstore "github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p-daemon/p2pclient"
 	multiaddr "github.com/multiformats/go-multiaddr"
 )
 
 type StreamFromTCPService struct {
-	Node *host.Host
+	Node *p2pclient.Client
 }
 
 // The following functions implement a window.ping() entrypoint callable from
@@ -43,15 +42,12 @@ func (sfwss *StreamFromTCPService) GetStream(this js.Value, param []js.Value) in
 				return
 			}
 
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			if err := (*sfwss.Node).Connect(ctx, *peer); err != nil {
+			if err := sfwss.Node.Connect(peer.ID, peer.Addrs); err != nil {
 				fmt.Printf("Connect error %v\n", err)
 				reject.Invoke(js.ValueOf("Connect error"))
 				return
 			}
-			s, err := (*sfwss.Node).NewStream(ctx, peer.ID, "/cats")
+			_, s, err := sfwss.Node.NewStream(peer.ID, []string{"/cats"})
 			if err != nil {
 				fmt.Println("huh, this should have worked: ", err)
 				return

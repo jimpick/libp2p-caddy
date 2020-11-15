@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"syscall/js"
 
 	"github.com/jimpick/libp2p-caddy/go-wasm/helloservice"
@@ -11,8 +12,11 @@ import (
 	"github.com/jimpick/libp2p-caddy/go-wasm/streamfromwsservice"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
+	peerstore "github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p-daemon/p2pclient"
 	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
 	ws "github.com/libp2p/go-ws-transport"
+	multiaddr "github.com/multiformats/go-multiaddr"
 )
 
 var (
@@ -23,6 +27,7 @@ var (
 func main() {
 	ctx := context.Background()
 
+	// local libp2p node for wss
 	var err error
 	node, err = libp2p.New(ctx,
 		libp2p.Transport(ws.New),
@@ -31,6 +36,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	// remote libp2p node for non-wss
+	controlMaddr, _ := multiaddr.NewMultiaddr("/dns4/libp2p-caddy-p2pd.localhost/tcp/9059/wss")
+	listenMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/0")
+	p2pclientNode, err := p2pclient.NewClient(controlMaddr, listenMaddr)
+	nodeID, nodeAddrs, err := p2pclientNode.Identify()
+	peerInfo := peerstore.AddrInfo{
+		ID:    nodeID,
+		Addrs: nodeAddrs,
+	}
+	addrs, err := peerstore.AddrInfoToP2pAddrs(&peerInfo)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("p2pclient->p2pd node address:", addrs[0])
 
 	// configure our own ping protocol
 	pingService = &ping.PingService{Host: node}
@@ -50,7 +70,7 @@ func main() {
 	}
 
 	sftcps := streamfromtcpservice.StreamFromTCPService{
-		Node: &node,
+		Node: p2pclientNode,
 	}
 
 	js.Global().Set("ping", js.FuncOf(ping.PingNode))

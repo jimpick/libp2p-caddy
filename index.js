@@ -53,6 +53,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`JS Pong: ${latency}ms`)
   }
 
+  const setWsMaddrButton = document.querySelector('#setWsMaddrBtn')
+  setWsMaddrButton.onclick = async function () {
+    document.querySelector('#maddr').value =
+    '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID_WS
+  }
+
+  const setTcpMaddrButton = document.querySelector('#setTcpMaddrBtn')
+  setTcpMaddrButton.onclick = async function () {
+    document.querySelector('#maddr').value =
+    '/ip4/127.0.0.1/tcp/2020/p2p/' + process.env.PEER_ID_TCP
+  }
+
   const setIpfsMaddrButton = document.querySelector('#setIpfsMaddrBtn')
   setIpfsMaddrButton.onclick = async function () {
     document.querySelector('#maddr').value =

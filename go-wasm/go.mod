@@ -18,6 +18,7 @@ require (
 	github.com/ipld/go-ipld-prime v0.5.1-0.20200828233916-988837377a7f
 	github.com/libp2p/go-libp2p v0.11.0
 	github.com/libp2p/go-libp2p-core v0.6.1
+	github.com/libp2p/go-libp2p-daemon v0.2.2
 	github.com/libp2p/go-libp2p-peer v0.2.0
 	github.com/libp2p/go-libp2p-peerstore v0.2.6
 	github.com/libp2p/go-libp2p-record v0.1.3
@@ -33,8 +34,10 @@ replace github.com/filecoin-project/go-fil-markets => ../../go-fil-markets
 
 replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
 
-replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport v0.1.1-0.20201019202657-b30eedb00d94
-
 replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport v0.0.5-0.20201019202422-85fd62f8a44c
 
 replace github.com/filecoin-project/go-jsonrpc => ../../go-jsonrpc-wasm
+
+replace github.com/libp2p/go-libp2p-daemon => ../../go-libp2p-daemon-ws
+
+replace github.com/libp2p/go-ws-transport => ../../go-ws-transport-0xproject-feat-wss-dialing
