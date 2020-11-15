@@ -19,3 +19,5 @@ replace github.com/libp2p/go-ws-transport => ../../../go-ws-transport-0xproject-
 replace github.com/libp2p/go-reuseport-transport => ../../../go-reuseport-transport
 
 replace github.com/libp2p/go-libp2p-swarm => ../../../go-libp2p-swarm
+
+replace github.com/libp2p/go-libp2p-daemon => ../../../go-libp2p-daemon-ws
