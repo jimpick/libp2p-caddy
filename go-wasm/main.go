@@ -61,7 +61,7 @@ func main() {
 
 	// APIs
 	helloservice.Start()
-	queryaskservice.Start()
+	queryaskservice.Start(p2pclientNode)
 
 	ping := pingservice.PingService{
 		Node:        &node,

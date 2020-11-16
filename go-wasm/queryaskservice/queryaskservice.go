@@ -13,11 +13,12 @@ import (
 	"github.com/filecoin-project/lotus/node/repo"
 	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/api"
 	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node"
+	"github.com/libp2p/go-libp2p-daemon/p2pclient"
 )
 
 var jsHandler js.Value
 
-func Start() {
+func Start(p2pclientNode *p2pclient.Client) {
 	var queryAskAPI api.QueryAskAPI
 
 	ctx := context.Background()
@@ -45,6 +46,7 @@ func Start() {
 		node.Override(new(lp2p.BaseIpfsRouting), nilRouting),
 		node.Override(new(moduleapi.ChainModuleAPI), nodeAPI),
 		node.Override(new(moduleapi.StateModuleAPI), nodeAPI),
+		node.Override(new(*p2pclient.Client), p2pclientNode),
 	)
 	if err != nil {
 		panic(err)

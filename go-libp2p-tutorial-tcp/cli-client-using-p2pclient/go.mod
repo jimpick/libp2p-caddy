@@ -8,6 +8,7 @@ require (
 	github.com/libp2p/go-libp2p-daemon v0.3.0
 	github.com/libp2p/go-ws-transport v0.3.1
 	github.com/multiformats/go-multiaddr v0.3.1
+	github.com/whyrusleeping/mafmt v1.2.8 // indirect
 )
 
 replace github.com/libp2p/go-libp2p => ../../../go-libp2p
@@ -21,3 +22,5 @@ replace github.com/libp2p/go-reuseport-transport => ../../../go-reuseport-transp
 replace github.com/libp2p/go-libp2p-swarm => ../../../go-libp2p-swarm
 
 replace github.com/libp2p/go-libp2p-daemon => ../../../go-libp2p-daemon-ws
+
+replace github.com/multiformats/go-multiaddr => ../../../go-multiaddr

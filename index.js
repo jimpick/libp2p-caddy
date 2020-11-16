@@ -56,13 +56,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const setWsMaddrButton = document.querySelector('#setWsMaddrBtn')
   setWsMaddrButton.onclick = async function () {
     document.querySelector('#maddr').value =
-    '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' + process.env.PEER_ID_WS
+      '/dns4/libp2p-caddy-ws.localhost/tcp/9056/wss/p2p/' +
+      process.env.PEER_ID_WS
   }
 
   const setTcpMaddrButton = document.querySelector('#setTcpMaddrBtn')
   setTcpMaddrButton.onclick = async function () {
     document.querySelector('#maddr').value =
-    '/ip4/127.0.0.1/tcp/2020/p2p/' + process.env.PEER_ID_TCP
+      '/ip4/127.0.0.1/tcp/2020/p2p/' + process.env.PEER_ID_TCP
   }
 
   const setIpfsMaddrButton = document.querySelector('#setIpfsMaddrBtn')
@@ -182,23 +183,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   )
+
   const queryAskClient = new LotusRPC(wasmQueryAskServiceProvider, {
     schema: mainnet.fullNode
   })
-  queryAskBtn.disabled = false
+
   queryAskBtn.disabled = false
   queryAskBtn.onclick = async function () {
-    log(`Query Ask`)
+    log(`Query Ask WSS`)
     const result = await queryAskClient.clientQueryAsk(
       '12D3KooWEUS7VnaRrHF24GTWVGYtcEsmr3jsnNLcsEwPU7rDgjf5',
       'f063655'
     )
-    /*
-      const result = await queryAskClient.clientQueryAsk(
-        '12D3KooWDMpcct12Vb6jPXwjvLQHA2hoP8XKGbUZ2tpue1ydoZUm',
-        'f02620'
-      )
-      */
-    log(`Query Ask: ${JSON.stringify(result)}`)
+    log(`Query Ask WSS: ${JSON.stringify(result)}`)
+  }
+
+  queryAskTcpBtn.disabled = false
+  queryAskTcpBtn.onclick = async function () {
+    log(`Query Ask TCP`)
+    const result = await queryAskClient.clientQueryAsk(
+      '12D3KooWDMpcct12Vb6jPXwjvLQHA2hoP8XKGbUZ2tpue1ydoZUm',
+      'f02620'
+    )
+    log(`Query Ask TCP: ${JSON.stringify(result)}`)
   }
 })
