@@ -41,3 +41,5 @@ replace github.com/filecoin-project/go-jsonrpc => ../../go-jsonrpc-wasm
 replace github.com/libp2p/go-libp2p-daemon => ../../go-libp2p-daemon-ws
 
 replace github.com/libp2p/go-ws-transport => ../../go-ws-transport-0xproject-feat-wss-dialing
+
+replace github.com/multiformats/go-multiaddr => ../../go-multiaddr
