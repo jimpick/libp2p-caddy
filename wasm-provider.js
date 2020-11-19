@@ -1,5 +1,8 @@
 class WasmProvider {
   constructor (wasmConnect, options = {}) {
+    if (wasmConnect === undefined) {
+      throw new Error('WasmProvider wasmConnect param is undefined')
+    }
     this.wasmConnect = wasmConnect
     this.id = 0
     this.inflight = new Map()

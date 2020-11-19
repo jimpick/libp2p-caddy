@@ -165,6 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  console.log('Jim window.connectHelloService', window.connectHelloService)
   const wasmHelloServiceProvider = new WasmProvider(window.connectHelloService)
   const helloClient = new LotusRPC(wasmHelloServiceProvider, { schema })
   const goHelloButton = document.querySelector('#goHelloBtn')
