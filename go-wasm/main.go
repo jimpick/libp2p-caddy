@@ -39,7 +39,8 @@ func main() {
 	}
 
 	// remote libp2p node for non-wss
-	controlMaddr, _ := multiaddr.NewMultiaddr("/dns4/libp2p-caddy-p2pd.localhost/tcp/9059/wss")
+	// controlMaddr, _ := multiaddr.NewMultiaddr("/dns4/libp2p-caddy-p2pd.localhost/tcp/9059/wss")
+	controlMaddr, _ := multiaddr.NewMultiaddr("/dns4/p2pd.v6z.me/tcp/9059/wss")
 	listenMaddr, _ := multiaddr.NewMultiaddr("/ip4/127.0.0.1/tcp/0")
 	p2pclientNode, err := p2pclient.NewClient(controlMaddr, listenMaddr)
 	fmt.Printf("Jim p2pclientNode %v\n", p2pclientNode)
