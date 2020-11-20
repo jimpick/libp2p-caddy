@@ -28,18 +28,18 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
 
-replace github.com/filecoin-project/lotus => github.com/jimpick/lotus v0.2.8-0.20201116192153-d110d1aef1b8
+replace github.com/filecoin-project/lotus => github.com/jimpick/lotus jim-wasm-client-query-ask
 
-replace github.com/filecoin-project/go-fil-markets => github.com/jimpick/go-fil-markets v0.6.4-0.20201116201755-0e73d171b665
+replace github.com/filecoin-project/go-fil-markets => github.com/jimpick/go-fil-markets jim-wasm-client-query-ask
 
-replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
+replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p jim-pruned-for-wss
 
-replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport v0.0.5-0.20201019202422-85fd62f8a44c
+replace github.com/libp2p/go-reuseport-transport => github.com/jimpick/go-reuseport-transport jim-pruned-for-wss
 
-replace github.com/filecoin-project/go-jsonrpc => github.com/jimpick/go-jsonrpc v0.0.0-20201109011442-669bac3b0e93
+replace github.com/filecoin-project/go-jsonrpc => github.com/jimpick/go-jsonrpc jim-wasm
 
-replace github.com/libp2p/go-libp2p-daemon => github.com/jimpick/go-libp2p-daemon v0.3.1-0.20201116042204-d52ad89165f5
+replace github.com/libp2p/go-libp2p-daemon => github.com/jimpick/go-libp2p-daemon jim-ws
 
-replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport v0.1.1-0.20201116042118-5dd07d9df8ce
+replace github.com/libp2p/go-ws-transport => github.com/jimpick/go-ws-transport	jim-feat-wss-dialing-new-go
 
-replace github.com/multiformats/go-multiaddr => github.com/jimpick/go-multiaddr v0.3.2-0.20201116042404-3634c019a1d6
+replace github.com/multiformats/go-multiaddr => github.com/jimpick/go-multiaddr jim-dialer-wss

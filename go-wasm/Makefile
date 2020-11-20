@@ -5,4 +5,4 @@ nodemon:
 	GOOS=js GOARCH=wasm nodemon --ext go --watch . --watch ../../go-libp2p --watch ../../go-libp2p-core --watch ../../go-libp2p-swarm --watch ../../go-ws-transport-0xproject-feat-wss-dialing --watch ../../go-jsonrpc-wasm --watch ../../lotus-wasm --watch ../../go-fil-markets --watch ../../go-libp2p-daemon-ws --exec go build -o main.wasm --signal SIGTERM
 
 clean:
-	rm -f *.wasm
+	rm -f *.wasm *.wasm.gz
