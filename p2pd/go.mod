@@ -18,6 +18,8 @@ require (
 
 replace github.com/libp2p/go-libp2p-daemon => ../../go-libp2p-daemon-ws
 
+replace github.com/multiformats/go-multiaddr => ../../go-multiaddr
+
 replace github.com/libp2p/go-libp2p-transport-upgrader => ../../go-libp2p-transport-upgrader
 
 replace github.com/libp2p/go-ws-transport => ../../go-ws-transport-0xproject-feat-wss-dialing
