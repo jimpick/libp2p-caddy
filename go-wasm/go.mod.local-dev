@@ -28,6 +28,8 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
 
+replace github.com/jimpick/lotus-utils => ../../../standalone-daemons/lotus-utils
+
 replace github.com/jimpick/lotus-query-ask-api-daemon => ../../../standalone-daemons/lotus-query-ask-api-daemon
 
 replace github.com/filecoin-project/lotus => ../../../standalone-daemons/lotus-query-ask-api-daemon/extern/lotus-modified-wasm

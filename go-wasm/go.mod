@@ -17,6 +17,7 @@ require (
 	github.com/ipfs/go-unixfs v0.2.4
 	github.com/ipld/go-ipld-prime v0.5.1-0.20200828233916-988837377a7f
 	github.com/jimpick/lotus-query-ask-api-daemon v0.0.0-00010101000000-000000000000
+	github.com/jimpick/lotus-utils v0.0.0-00010101000000-000000000000
 	github.com/libp2p/go-libp2p v0.11.0
 	github.com/libp2p/go-libp2p-core v0.6.1
 	github.com/libp2p/go-libp2p-daemon v0.2.2
@@ -28,6 +29,8 @@ require (
 	go.uber.org/fx v1.13.1
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
+
+replace github.com/jimpick/lotus-utils => ../../../standalone-daemons/lotus-utils
 
 replace github.com/jimpick/lotus-query-ask-api-daemon => ../../../standalone-daemons/lotus-query-ask-api-daemon
 

@@ -641,6 +641,8 @@ github.com/jimpick/lotus v0.2.8-0.20201116192153-d110d1aef1b8 h1:6/USd6chCJZyJR2
 github.com/jimpick/lotus v0.2.8-0.20201116192153-d110d1aef1b8/go.mod h1:5uPv1HAaXEPuR30Wcb0MgC6mTku9J3/g1rr9GYeoH2c=
 github.com/jimpick/lotus-query-ask-api-daemon v0.0.0-20201127013035-45cf249525e5 h1:3vcnM4O1SUKU10CzLtTXJM89GSnJjza+r+xIiTUmYqg=
 github.com/jimpick/lotus-query-ask-api-daemon v0.0.0-20201127013035-45cf249525e5/go.mod h1:JGOwfmWuquN+6ob5QaPrtc6m65iH+o3H7L0SMxOtl/4=
+github.com/jimpick/lotus-utils v0.0.1 h1:WdOFGia2wKC3duszgptBPIMdr3HSt5I8MTHJ0xiuo1o=
+github.com/jimpick/lotus-utils v0.0.1/go.mod h1:G87pTPTxstdPDlmSfiyJiFATJe8FgjAsweU9nD4fU2A=
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/jmespath/go-jmespath v0.3.0/go.mod h1:9QtRXoHjLGCJ5IBSaohpXITPlowMeeYCZ7fLUTSywik=
 github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901/go.mod h1:Z86h9688Y0wesXCyonoVr47MasHilkuLMqGhRZ4Hpak=
