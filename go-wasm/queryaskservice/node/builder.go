@@ -28,8 +28,8 @@ import (
 	"github.com/filecoin-project/lotus/node/modules/lp2p"
 	"github.com/filecoin-project/lotus/node/repo"
 
-	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node/impl"
 	"github.com/jimpick/lotus-query-ask-api-daemon/api"
+	"github.com/jimpick/lotus-query-ask-api-daemon/node/impl"
 	"go.uber.org/fx"
 	"golang.org/x/xerrors"
 )
