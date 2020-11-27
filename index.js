@@ -6,6 +6,7 @@ import { BrowserProvider } from './browser-provider'
 import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
 import { mainnet } from '@filecoin-shipyard/lotus-client-schema'
 import { WasmProvider } from './wasm-provider'
+import delay from 'delay'
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Create our libp2p node
@@ -90,8 +91,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetch('go-wasm/main.wasm'),
     go.importObject
   )
-  status.innerText = 'All systems good! JS and Go loaded.'
   go.run(result.instance)
+  await delay(1000)
+  status.innerText = 'All systems good! JS and Go loaded.'
+  console.log('All systems go!')
 
   const goPingButton = document.querySelector('#goPingBtn')
   goPingButton.disabled = false
@@ -111,6 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     log(`Go Stream from WS result: ${result}`)
   }
 
+  /*
   const goStreamTcpButton = document.querySelector('#goStreamTcpBtn')
   goStreamTcpButton.disabled = false
   goStreamTcpButton.onclick = async function () {
@@ -119,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const result = await window.streamFromTcp(target)
     log(`Go Stream from TCP result: ${result}`)
   }
+  */
 
   const goGraphSyncButton = document.querySelector('#goGraphSyncBtn')
   goGraphSyncButton.disabled = false

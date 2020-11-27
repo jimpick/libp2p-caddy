@@ -11,8 +11,8 @@ import (
 	"github.com/filecoin-project/lotus/node/modules/lp2p"
 	"github.com/filecoin-project/lotus/node/modules/moduleapi"
 	"github.com/filecoin-project/lotus/node/repo"
-	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/api"
 	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/node"
+	"github.com/jimpick/lotus-query-ask-api-daemon/api"
 	"github.com/libp2p/go-libp2p-daemon/p2pclient"
 )
 

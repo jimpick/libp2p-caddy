@@ -28,9 +28,11 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 )
 
-replace github.com/filecoin-project/lotus => ../../lotus-wasm
+replace github.com/jimpick/lotus-query-ask-api-daemon => ../../../standalone-daemons/lotus-query-ask-api-daemon
 
-replace github.com/filecoin-project/go-fil-markets => ../../go-fil-markets
+replace github.com/filecoin-project/lotus => ../../../standalone-daemons/lotus-query-ask-api-daemon/extern/lotus-modified-wasm
+
+replace github.com/filecoin-project/go-fil-markets => ../../../standalone-daemons/lotus-query-ask-api-daemon/extern/go-fil-markets-modified-wasm
 
 replace github.com/libp2p/go-libp2p => github.com/jimpick/go-libp2p v0.3.2-0.20201019200821-ea23aad1363a
 

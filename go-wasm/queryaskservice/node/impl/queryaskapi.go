@@ -2,7 +2,7 @@ package impl
 
 import (
 	"github.com/filecoin-project/lotus/node/impl/client"
-	"github.com/jimpick/libp2p-caddy/go-wasm/queryaskservice/api"
+	"github.com/jimpick/lotus-query-ask-api-daemon/api"
 )
 
 type QueryAskAPI struct {
